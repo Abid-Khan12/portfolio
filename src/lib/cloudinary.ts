@@ -12,7 +12,7 @@ cloudinary.config({
 
 export const uploadToCloudinary = (
    buffer: Buffer<ArrayBufferLike>,
-   subFolder: "my-avatar" | "project_banners",
+   subFolder: "my-avatar" | "project-banners",
 ): Promise<UploadApiResponse | undefined> => {
    const transformation: TransformationOptions =
       subFolder === "my-avatar"
@@ -48,14 +48,17 @@ export const uploadToCloudinary = (
    });
 };
 
-export const removeFromCloudinary = async (public_id: string) => {
+export const removeFromCloudinary = async (public_id: string): Promise<boolean> => {
    try {
       await cloudinary.uploader.destroy(public_id, {
          resource_type: "image",
       });
 
       logger.info("Image destroyed from cloudinary successfully");
+
+      return true;
    } catch (error) {
       logger.error(`Error destorying the image from cloudinary : ${error}`);
+      return false;
    }
 };

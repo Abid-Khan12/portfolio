@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
          .exec();
 
       if (!user) {
-         logger.warn(`Someone tried to login with these credentials: ${JSON.stringify(parsedBody)}`,);
+         logger.warn(`Someone tried to login with these credentials: `, parsedBody);
          return NextResponse.json(
             { success: false, status: 404, message: "User not found" },
             { status: 404 },

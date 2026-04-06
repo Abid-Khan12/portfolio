@@ -37,5 +37,9 @@ export const generateAccessToken = (userId: Types.ObjectId): string => {
 };
 
 export const verifyAccessToken = (token: string) => {
-   return jwt.verify(token, env.JWT_ACCESS_SECRET);
+   try {
+      return jwt.verify(token, env.JWT_ACCESS_SECRET) as { userId: string };
+   } catch (error) {
+      return null;
+   }
 };

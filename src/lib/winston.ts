@@ -7,6 +7,7 @@ const logger = winston.createLogger({
 
    format: winston.format.combine(
       winston.format.errors({ stack: true }),
+      winston.format.splat(),
       winston.format.timestamp({
          format: "YYYY-MM-DD hh:mm a",
       }),

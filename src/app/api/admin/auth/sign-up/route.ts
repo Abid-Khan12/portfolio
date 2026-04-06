@@ -38,9 +38,7 @@ export async function POST(request: NextRequest) {
       const userCount = await UserModel.countDocuments();
 
       if (userCount >= 1) {
-         logger.warn(
-            `Someone tried to create account with these credentials: ${JSON.stringify(parsedBody)}`,
-         );
+         logger.warn(`Someone tried to create account with these credentials: `, parsedBody);
          return NextResponse.json(
             { success: false, status: 400, message: "Nice try buddy" },
             { status: 400 },
@@ -52,7 +50,12 @@ export async function POST(request: NextRequest) {
       if (!result) {
          logger.error("Error while uploading to cloudinary");
          return NextResponse.json(
-            { success: false, status: 500, message: "Error while uploading to cloudinary" },
+            {
+               success: false,
+               status: 500,
+               message: "Internal server error",
+               error: "Error while uploading to cloudinary",
+            },
             { status: 500 },
          );
       }
