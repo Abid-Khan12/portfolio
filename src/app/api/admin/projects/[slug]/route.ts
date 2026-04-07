@@ -1,16 +1,201 @@
-import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+import z from "zod";
 
+import { removeFromCloudinary, uploadToCloudinary } from "@/lib/cloudinary";
 import connectDB from "@/lib/mongoose";
 import logger from "@/lib/winston";
 import { verifyAccessToken } from "@/utils/generate-token";
-import { removeFromCloudinary } from "@/lib/cloudinary";
 
-import ProjectModel from "@/models/project-model";
+import updateProjectSchema from "@/schemas/projects/update";
 
-export async function GET(request: NextRequest) {}
+import ProjectModel, { IProject } from "@/models/project-model";
 
-export async function PATCH(request: NextRequest) {}
+type UpdateData = Partial<
+   Pick<IProject, "githubLink" | "liveLink" | "role" | "description" | "title" | "techStack"> & {
+      projectImage:
+         | File
+         | {
+              width: number;
+              height: number;
+              url: string;
+              public_id: string;
+           };
+   }
+>;
+
+export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+   try {
+      const accessToken = (await cookies()).get("accessToken")?.value;
+      const { slug } = await params;
+
+      if (!accessToken) {
+         logger.warn("Someone tried to get projects");
+         return NextResponse.json(
+            { success: false, status: 401, message: "Unauthorized" },
+            { status: 401 },
+         );
+      }
+
+      const decoded = verifyAccessToken(accessToken);
+
+      if (!decoded) {
+         logger.warn("Invalid OR Expired token provided");
+         return NextResponse.json(
+            { success: false, status: 401, message: "Invalid OR Expired token" },
+            { status: 401 },
+         );
+      }
+
+      const { userId } = decoded;
+
+      await connectDB();
+
+      const project = await ProjectModel.findOne({ slug })
+         .select("-__v -updatedAt -_id")
+         .lean()
+         .exec();
+
+      logger.info("Project fetched successfully by : ", { userId });
+
+      return NextResponse.json(
+         {
+            success: true,
+            status: 200,
+            message: "Project fetched successfully",
+            data: {
+               project,
+            },
+         },
+         { status: 200 },
+      );
+   } catch (error) {
+      const err = error as Error;
+      logger.error("Projects GET Api Error : ", { ...err });
+
+      return NextResponse.json(
+         { success: false, status: 500, message: "Internal server error", error: err.message },
+         { status: 500 },
+      );
+   }
+}
+
+export async function PATCH(
+   request: NextRequest,
+   { params }: { params: Promise<{ slug: string }> },
+) {
+   try {
+      const accessToken = (await cookies()).get("accessToken")?.value;
+      const formData = await request.formData();
+      const techStack = formData.getAll("techStack");
+      const body = {
+         ...Object.fromEntries(formData.entries()),
+         ...(techStack.length > 0 && { techStack }),
+      };
+      const { slug } = await params;
+
+      if (!accessToken) {
+         logger.warn("Someone tried to get projects");
+         return NextResponse.json(
+            { success: false, status: 401, message: "Unauthorized" },
+            { status: 401 },
+         );
+      }
+
+      const decoded = verifyAccessToken(accessToken);
+
+      if (!decoded) {
+         logger.warn("Invalid OR Expired token provided");
+         return NextResponse.json(
+            { success: false, status: 401, message: "Invalid OR Expired token" },
+            { status: 401 },
+         );
+      }
+
+      const { userId } = decoded;
+
+      const { success, data: parsedBody, error } = updateProjectSchema.safeParse(body);
+
+      if (!success) {
+         const formatedErrors = z.flattenError(error);
+
+         return NextResponse.json(
+            {
+               success: false,
+               status: 400,
+               message: "Validation error",
+               error: formatedErrors.fieldErrors,
+            },
+            { status: 400 },
+         );
+      }
+
+      await connectDB();
+
+      const project = await ProjectModel.findOne({ slug }).lean().exec();
+
+      let newData: UpdateData = { ...parsedBody };
+
+      if (parsedBody.projectImage) {
+         const arrayBuffer = await parsedBody.projectImage.arrayBuffer();
+         const buffer = Buffer.from(arrayBuffer);
+
+         await removeFromCloudinary(project.projectImage.public_id);
+
+         const result = await uploadToCloudinary(buffer, "project-banners");
+
+         if (!result) {
+            return NextResponse.json(
+               {
+                  success: false,
+                  status: 500,
+                  message: "Internal server error",
+                  error: "Error while uploading to cloudinary",
+               },
+               { status: 500 },
+            );
+         }
+
+         newData.projectImage = {
+            width: result.width,
+            height: result.height,
+            url: result.secure_url,
+            public_id: result.public_id,
+         };
+      }
+
+      const updatedProject = await ProjectModel.findOneAndUpdate(
+         { slug },
+         { ...newData },
+         { returnDocument: "after" },
+      )
+         .select("-__v -_id -updatedAt")
+         .lean()
+         .exec();
+
+      logger.info("Project updated successfully by : ", { userId });
+
+      return NextResponse.json(
+         {
+            success: false,
+            status: 200,
+            message: "Project updated successfully",
+            data: {
+               project: updatedProject,
+            },
+         },
+         { status: 200 },
+      );
+   } catch (error) {
+      const err = error as Error;
+      logger.error("Projects GET Api Error : ", { ...err });
+
+      return NextResponse.json(
+         { success: false, status: 500, message: "Internal server error", error: err.message },
+         { status: 500 },
+      );
+   }
+}
 
 export async function DELETE(
    request: NextRequest,
