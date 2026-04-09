@@ -10,6 +10,9 @@ const envSchema = z.object({
    ACCESS_TOKEN_EXPIRY: z.string().nonempty(),
    QUERY_OFFSET: z.string().nonempty(),
    QUERY_LIMIT: z.string().nonempty(),
+   MY_GMAIL: z.string().nonempty(),
+   UPSTASH_REDIS_REST_URL: z.string().nonempty(),
+   UPSTASH_REDIS_REST_TOKEN: z.string().nonempty(),
    NODE_ENV: z.enum(["development", "production"]),
 });
 

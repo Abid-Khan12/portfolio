@@ -9,7 +9,7 @@ export interface IUser {
       url: string;
       public_id: string;
    };
-   comparePassword: (userPassword: string) => Promise<boolean>;
+   about?: string;
 }
 
 const userSchema = new Schema<IUser>(
@@ -20,6 +20,7 @@ const userSchema = new Schema<IUser>(
       },
       email: {
          type: String,
+         toLowerCase: true,
          required: [true, "email is required"],
       },
       password: {
@@ -34,6 +35,10 @@ const userSchema = new Schema<IUser>(
             required: [true, "avatar > public_id is required"],
          },
       },
+      about: {
+         type: String,
+         default: "",
+      },
    },
    {
       timestamps: true,
@@ -46,7 +51,6 @@ userSchema.pre("save", async function () {
    }
    this.password = await bcrypt.hash(this.password, 10);
 });
-
 
 const UserModel = models.User || model<IUser>("User", userSchema);
 

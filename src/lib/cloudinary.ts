@@ -24,7 +24,7 @@ export const uploadToCloudinary = (
               crop: "fill",
               gravity: "face",
            }
-         : { quality: "auto", fetch_format: "webp", width: 1280, crop: "scale" };
+         : { quality: "auto", fetch_format: "webp", width: 600, crop: "scale" };
 
    return new Promise((resolve, reject) => {
       cloudinary.uploader

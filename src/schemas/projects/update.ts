@@ -6,7 +6,7 @@ const updateProjectSchema = z.object({
    role: z.enum(["Frontend", "MERN"], "Either Frontend OR MERN").optional(),
    githubLink: z.string().min(1, "Github link is required").optional(),
    liveLink: z.string().optional(),
-   techStack: z.array(z.string()).optional(),
+   techStack: z.array(z.string()).min(1, "Minimum one technology is required").optional(),
    projectImage: z
       .custom<File>()
       .refine((file) => file.size <= 2097152, "File size must be less than 2 MB")
