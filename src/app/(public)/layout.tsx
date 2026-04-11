@@ -1,14 +1,12 @@
 import { ChildrenProp } from "@/types/type";
 
-import Footer from "@/components/footer";
 import Header from "@/components/header";
 
 const layout = ({ children }: ChildrenProp) => {
    return (
-      <div className="relative w-full max-w-7xl mx-auto px-2">
+      <div className="relative">
          <Header />
-         <main className="mt-3">{children}</main>
-         <Footer />
+         <main className="w-full max-w-7xl mx-auto px-4">{children}</main>
       </div>
    );
 };

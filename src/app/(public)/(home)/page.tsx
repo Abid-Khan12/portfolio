@@ -21,7 +21,7 @@ import Image from "next/image";
 
 const page = () => {
    return (
-      <div className="min-h-screen flex flex-col gap-4 items-center justify-center">
+      <div className="page flex flex-col gap-4 items-center justify-center">
          <h1 className="font-heading text-5xl">Heading</h1>
          <p className="text-muted-foreground font-medium text-lg">Lorem ipsum dolor sit amet.</p>
 
@@ -37,12 +37,6 @@ const page = () => {
             />
          </div>
 
-         <Card className="w-sm">
-            <CardHeader>
-               <CardTitle className="text-2xl">Card Title</CardTitle>
-               <CardDescription>Card Description</CardDescription>
-            </CardHeader>
-         </Card>
          <div className="flex items-center gap-4">
             <Image
                src={Twitter}
@@ -70,7 +64,7 @@ const page = () => {
             />
          </div>
 
-         <Button size={"lg"}>Click Me</Button>
+         
 
          <div className="flex flex-col gap-y-3 items-start">
             <Label

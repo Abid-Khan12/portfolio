@@ -13,6 +13,7 @@ const envSchema = z.object({
    MY_GMAIL: z.string().nonempty(),
    UPSTASH_REDIS_REST_URL: z.string().nonempty(),
    UPSTASH_REDIS_REST_TOKEN: z.string().nonempty(),
+   NEXT_PUBLIC_BASE_URL: z.string().nonempty(),
    NODE_ENV: z.enum(["development", "production"]),
 });
 

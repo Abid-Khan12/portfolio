@@ -71,11 +71,11 @@ export async function POST(request: NextRequest) {
          {
             success: true,
             message: "Logged in successfully",
-            accessToken,
             data: {
                userName: user.userName,
                email: user.email,
                avatar: user.avatar.url,
+               accessToken,
             },
          },
          { status: 200 },

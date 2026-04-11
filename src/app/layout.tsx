@@ -1,16 +1,27 @@
-import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
 import { Bebas_Neue, Manrope } from "next/font/google";
+
+import type { Metadata } from "next";
+
 import "./globals.css";
+
+import { cn } from "@/lib/utils";
+
+import { AdminContextProvider } from "@/context/admin-context";
+
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import ReactQueryProvider from "@/components/providers/react-query-provider";
+
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/sonner";
 
 const bebasNeueHeading = Bebas_Neue({
    variable: "--font-heading",
    weight: ["400"],
    subsets: ["latin"],
+   preload: true,
 });
 
-const manrope = Manrope({ subsets: ["latin"], variable: "--font-sans" });
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-sans", preload: true });
 
 export const metadata: Metadata = {
    title: "Create Next App",
@@ -35,14 +46,37 @@ export default function RootLayout({
          suppressHydrationWarning
       >
          <body className="min-h-full flex flex-col">
-            <ThemeProvider
-               attribute="class"
-               defaultTheme="system"
-               enableSystem
-               disableTransitionOnChange
-            >
-               {children}
-            </ThemeProvider>
+            <ReactQueryProvider>
+               <AdminContextProvider>
+                  <ThemeProvider
+                     attribute="class"
+                     defaultTheme="system"
+                     enableSystem
+                     disableTransitionOnChange
+                  >
+                     <TooltipProvider>{children}</TooltipProvider>
+                  </ThemeProvider>
+               </AdminContextProvider>
+            </ReactQueryProvider>
+            <Toaster
+               position="top-right"
+               richColors
+               toastOptions={{
+                  style: {
+                     background: "var(--card)",
+                     color: "var(--card-foreground)",
+                     border: "1px solid var(--border)",
+                     borderRadius: "var(--radius)",
+                  },
+                  classNames: {
+                     success: "!border-green-500 [&>[data-icon]]:text-green-500",
+                     error: "!border-destructive [&>[data-icon]]:text-destructive",
+                     warning: "!border-yellow-500 [&>[data-icon]]:text-yellow-500",
+                     info: "!border-ring [&>[data-icon]]:text-ring",
+                  },
+                  duration: 2000,
+               }}
+            />
          </body>
       </html>
    );
