@@ -102,7 +102,7 @@
    --popover: oklch(0.99 0 0);
    --popover-foreground: #0a0a0a;
 
-   --muted: oklch(0.97 0 0); /* very light grey surface */
+   --muted: oklch(0.92 0 0); /* slightly darker muted surface */
 
    --accent: oklch(0.94 0 0); /* slightly darker surface accent */
    --accent-foreground: #0a0a0a;

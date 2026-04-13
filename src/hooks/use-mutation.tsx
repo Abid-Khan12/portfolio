@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 
@@ -13,7 +12,7 @@ import { handleDelete, handlePost, handleUpdate } from "@/apis/api";
 const useCustomMutation = <TPayload = any, TResponse = {}>({ api_key, api_url }: HookProps) => {
    const { setUser } = useAdminContext();
 
-   const router = useRouter();
+   
 
    const mutation = useMutation<ApiResponse<TResponse>, ApiError, MutationVaraibles<TPayload>>({
       mutationKey: api_key,
@@ -42,7 +41,7 @@ const useCustomMutation = <TPayload = any, TResponse = {}>({ api_key, api_url }:
             localStorage.removeItem("accessToken");
             localStorage.removeItem("userData");
             setUser(null);
-            router.replace("/admin/auth/login");
+            window.location.href = "/admin/login";
             return;
          }
       }

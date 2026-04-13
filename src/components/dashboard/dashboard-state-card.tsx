@@ -39,16 +39,14 @@ const DashboardStatsSkeleton = () => (
 
 const DashboardStats = () => {
    const { data, isLoading } = useFetch<DashboardStatsResponse>({
-      api_url: "/admin/dashboard",
       api_key: ["dashboard_state"],
+      api_url: "/admin/dashboard",
    });
 
    if (isLoading) return <DashboardStatsSkeleton />;
+   if (!data?.data) return null;
 
-   const stats = data?.data;
-   if (!stats) return null;
-
-   const { totalProjects, lastUploadedProject, techStackStats } = stats;
+   const { totalProjects, lastUploadedProject, techStackStats } = data.data;
    const lastProject = lastUploadedProject;
 
    return (
@@ -83,7 +81,7 @@ const DashboardStats = () => {
             </CardHeader>
             <CardContent className="h-full content-between">
                <p className="font-heading text-4xl tracking-wide truncate">
-                  {lastProject.title ?? "—"}
+                  {lastProject?.title ?? "—"}
                </p>
                <CardDescription className="mt-1 text-xs">
                   {lastProject
@@ -105,15 +103,19 @@ const DashboardStats = () => {
             </CardHeader>
             <CardContent>
                <div className="flex flex-wrap gap-1.5 mt-1">
-                  {techStackStats.map((tech) => (
-                     <Badge
-                        key={tech._id}
-                        className="space-x-1"
-                     >
-                        <span>{tech._id}</span>
-                        <span className="">×{tech.count}</span>
-                     </Badge>
-                  ))}
+                  {techStackStats.length === 0 ? (
+                     <p className="font-heading text-4xl">—</p>
+                  ) : (
+                     techStackStats.map((tech) => (
+                        <Badge
+                           key={tech._id}
+                           className="space-x-1"
+                        >
+                           <span>{tech._id}</span>
+                           <span className="">×{tech.count}</span>
+                        </Badge>
+                     ))
+                  )}
                </div>
                <CardDescription className="mt-2 text-xs">Across all projects</CardDescription>
             </CardContent>

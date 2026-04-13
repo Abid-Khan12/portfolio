@@ -4,23 +4,11 @@ import { cookies } from "next/headers";
 
 import connectDB from "@/lib/mongoose";
 import logger from "@/lib/winston";
-import { removeFromCloudinary, uploadToCloudinary } from "@/lib/cloudinary";
 import { verifyAccessToken } from "@/utils/generate-token";
-
-import updateProfileSchema from "@/schemas/profile/update";
 
 import UserModel, { IUser } from "@/models/user-model";
 
-type UpdateData = Partial<
-   Pick<IUser, "userName" | "about"> & {
-      avatar:
-         | File
-         | {
-              url: string;
-              public_id: string;
-           };
-   }
->;
+import updateAboutSchema from "@/schemas/profile/update-about";
 
 export async function PATCH(request: NextRequest) {
    try {
@@ -44,10 +32,10 @@ export async function PATCH(request: NextRequest) {
          );
       }
       const { userId } = decoded;
-      const formData = await request.formData();
-      const body = Object.fromEntries(formData.entries());
 
-      const { success, data: parsedBody, error } = updateProfileSchema.safeParse(body);
+      const body = await request.json();
+
+      const { success, data: parsedBody, error } = updateAboutSchema.safeParse(body);
 
       if (!success) {
          const formatedErrors = z.flattenError(error);
@@ -79,38 +67,9 @@ export async function PATCH(request: NextRequest) {
          );
       }
 
-      let updatedUserData: UpdateData = { ...parsedBody };
-
-      if (parsedBody.avatar) {
-         const arrayBuffer = await parsedBody.avatar.arrayBuffer();
-         const buffer = Buffer.from(arrayBuffer);
-
-         await removeFromCloudinary(user.avatar.public_id);
-
-         const result = await uploadToCloudinary(buffer, "my-avatar");
-
-         if (!result) {
-            logger.error("Error while uploading to cloudinary");
-            return NextResponse.json(
-               {
-                  success: false,
-                  status: 500,
-                  message: "Internal server error",
-                  error: "Error while uploading to cloudinary",
-               },
-               { status: 500 },
-            );
-         }
-
-         updatedUserData.avatar = {
-            url: result.secure_url,
-            public_id: result.public_id,
-         };
-      }
-
       const updatedUser = await UserModel.findByIdAndUpdate<IUser>(
          userId,
-         { ...updatedUserData },
+         { about: parsedBody.about },
          { returnDocument: "after" },
       ).exec();
 
@@ -134,9 +93,7 @@ export async function PATCH(request: NextRequest) {
             status: 200,
             message: "Profile updated successfully",
             data: {
-               userName: updatedUser.userName,
-               email: updatedUser.email,
-               avatar: updatedUser.avatar.url,
+               about: user.about,
             },
          },
          { status: 200 },

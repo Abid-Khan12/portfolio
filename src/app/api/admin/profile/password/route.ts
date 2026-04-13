@@ -1,26 +1,15 @@
 import z from "zod";
+import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 import connectDB from "@/lib/mongoose";
 import logger from "@/lib/winston";
-import { removeFromCloudinary, uploadToCloudinary } from "@/lib/cloudinary";
 import { verifyAccessToken } from "@/utils/generate-token";
 
-import updateProfileSchema from "@/schemas/profile/update";
+import { updateUserPasswordSchema } from "@/schemas/profile/update-password";
 
-import UserModel, { IUser } from "@/models/user-model";
-
-type UpdateData = Partial<
-   Pick<IUser, "userName" | "about"> & {
-      avatar:
-         | File
-         | {
-              url: string;
-              public_id: string;
-           };
-   }
->;
+import UserModel from "@/models/user-model";
 
 export async function PATCH(request: NextRequest) {
    try {
@@ -43,11 +32,12 @@ export async function PATCH(request: NextRequest) {
             { status: 401 },
          );
       }
-      const { userId } = decoded;
-      const formData = await request.formData();
-      const body = Object.fromEntries(formData.entries());
 
-      const { success, data: parsedBody, error } = updateProfileSchema.safeParse(body);
+      const { userId } = decoded;
+
+      const body = await request.json();
+
+      const { success, data: parsedBody, error } = updateUserPasswordSchema.safeParse(body);
 
       if (!success) {
          const formatedErrors = z.flattenError(error);
@@ -65,7 +55,7 @@ export async function PATCH(request: NextRequest) {
 
       await connectDB();
 
-      const user = await UserModel.findById<IUser>(userId).exec();
+      const user = await UserModel.findById(userId).select("+password").lean().exec();
 
       if (!user) {
          logger.warn("Someone tried to update profile : ", { userId });
@@ -79,40 +69,22 @@ export async function PATCH(request: NextRequest) {
          );
       }
 
-      let updatedUserData: UpdateData = { ...parsedBody };
+      const isOldPassCorrect = await bcrypt.compare(parsedBody.oldPassword, user.password);
 
-      if (parsedBody.avatar) {
-         const arrayBuffer = await parsedBody.avatar.arrayBuffer();
-         const buffer = Buffer.from(arrayBuffer);
-
-         await removeFromCloudinary(user.avatar.public_id);
-
-         const result = await uploadToCloudinary(buffer, "my-avatar");
-
-         if (!result) {
-            logger.error("Error while uploading to cloudinary");
-            return NextResponse.json(
-               {
-                  success: false,
-                  status: 500,
-                  message: "Internal server error",
-                  error: "Error while uploading to cloudinary",
-               },
-               { status: 500 },
-            );
-         }
-
-         updatedUserData.avatar = {
-            url: result.secure_url,
-            public_id: result.public_id,
-         };
+      if (!isOldPassCorrect) {
+         return NextResponse.json(
+            { success: false, status: 400, message: "Invalid old password" },
+            { status: 400 },
+         );
       }
 
-      const updatedUser = await UserModel.findByIdAndUpdate<IUser>(
-         userId,
-         { ...updatedUserData },
-         { returnDocument: "after" },
-      ).exec();
+      const hashedNewPass = await bcrypt.hash(parsedBody.newPassword, 10);
+
+      logger.info(hashedNewPass)
+
+      const updatedUser = await UserModel.findByIdAndUpdate(userId, {
+         password: hashedNewPass,
+      }).exec();
 
       if (!updatedUser) {
          return NextResponse.json(
@@ -126,24 +98,19 @@ export async function PATCH(request: NextRequest) {
          );
       }
 
-      logger.info("Profile updated by : ", { userId });
+      logger.info("Password updated by : ", { userId });
 
       return NextResponse.json(
          {
             success: true,
             status: 200,
-            message: "Profile updated successfully",
-            data: {
-               userName: updatedUser.userName,
-               email: updatedUser.email,
-               avatar: updatedUser.avatar.url,
-            },
+            message: "Password updated successfully",
          },
          { status: 200 },
       );
    } catch (error) {
       const err = error as Error;
-      logger.error("Profile Api error : ", { message: err.message, cause: err.cause });
+      logger.error("Password Api error : ", { message: err.message, cause: err.cause });
       return NextResponse.json(
          { success: false, status: 500, message: "Internal server error", error: err.message },
          { status: 500 },

@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 import { Toggle } from "@/components/ui/toggle";
 import { Button } from "@/components/ui/button";
-import { navLinks } from "@/components/header";
+import { navLinks } from "@/components/header/header";
 
 // ── Animated hamburger / X icon ─────────────────────────────────────────────
 const HamburgerIcon = ({ open }: { open: boolean }) => {

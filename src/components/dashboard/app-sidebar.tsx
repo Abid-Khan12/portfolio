@@ -7,7 +7,7 @@ import { FolderKanbanIcon, LayoutDashboardIcon, UserRoundIcon } from "lucide-rea
 
 import { cn } from "@/lib/utils";
 
-import NavUser from "@/components/nav-user";
+import NavUser from "@/components/dashboard/nav-user";
 import {
    Sidebar,
    SidebarContent,
@@ -31,7 +31,7 @@ const navLinks = [
 
 // ── Header: logo + trigger ───────────────────────────────────────────────────
 const AppSidebarHeader = () => {
-   const { open, isMobile, toggleSidebar } = useSidebar();
+   const { open, isMobile } = useSidebar();
 
    return (
       <SidebarHeader
@@ -42,16 +42,19 @@ const AppSidebarHeader = () => {
       >
          {/* Logo — hidden when collapsed on desktop */}
          <span
-            className={cn("font-heading text-xl tracking-wide text-primary truncate", {
-               hidden: !open,
-            })}
+            className={cn(
+               "font-heading text-xl tracking-wide dark:text-primary text-foreground truncate",
+               {
+                  hidden: !open,
+               },
+            )}
          >
             Abid Khan
          </span>
 
          {/* Trigger — PanelLeft on desktop, X on mobile when open */}
          <SidebarTrigger
-            className={"flex size-8 items-center justify-center hover:text-muted-foreground"}
+            className={"flex size-8 items-center justify-center dark:hover:text-muted-foreground"}
             iconVariant={isMobile ? "cancel" : "left"}
          />
       </SidebarHeader>
@@ -95,7 +98,7 @@ const AppSidebarNav = () => {
 // ── Footer ───────────────────────────────────────────────────────────────────
 const AppSidebarFooter = () => {
    return (
-      <SidebarFooter className="border-t border-border  py-3">
+      <SidebarFooter className="border-t border-border">
          <NavUser />
       </SidebarFooter>
    );
@@ -104,7 +107,10 @@ const AppSidebarFooter = () => {
 // ── Root ─────────────────────────────────────────────────────────────────────
 export default function AppSidebar() {
    return (
-      <Sidebar collapsible="icon">
+      <Sidebar
+         collapsible="icon"
+         className="h-full"
+      >
          <AppSidebarHeader />
          <SidebarContent>
             <AppSidebarNav />

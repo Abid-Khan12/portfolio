@@ -8,11 +8,11 @@ import { cn } from "@/lib/utils";
 
 import { AdminContextProvider } from "@/context/admin-context";
 
-import { ThemeProvider } from "@/components/providers/theme-provider";
 import ReactQueryProvider from "@/components/providers/react-query-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const bebasNeueHeading = Bebas_Neue({
    variable: "--font-heading",

@@ -1,21 +1,7 @@
 import IconButton from "@/components/buttons/icon-button";
-import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Instagram, Twitter, Github, LinkedIn } from "@/public/index";
-
-import {
-   AlertDialog,
-   AlertDialogAction,
-   AlertDialogCancel,
-   AlertDialogContent,
-   AlertDialogDescription,
-   AlertDialogFooter,
-   AlertDialogHeader,
-   AlertDialogTitle,
-   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 
 import Image from "next/image";
 
@@ -64,8 +50,6 @@ const page = () => {
             />
          </div>
 
-         
-
          <div className="flex flex-col gap-y-3 items-start">
             <Label
                htmlFor="input-box"
@@ -78,30 +62,8 @@ const page = () => {
                id="input-box"
             />
          </div>
-         <AlertDialogDemo />
       </div>
    );
 };
 
 export default page;
-
-export function AlertDialogDemo() {
-   return (
-      <AlertDialog>
-         <AlertDialogTrigger render={<Button variant="outline">Show Dialog</Button>} />
-         <AlertDialogContent size="default">
-            <AlertDialogHeader>
-               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-               <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete your account from our
-                  servers.
-               </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-               <AlertDialogCancel>Cancel</AlertDialogCancel>
-               <AlertDialogAction>Continue</AlertDialogAction>
-            </AlertDialogFooter>
-         </AlertDialogContent>
-      </AlertDialog>
-   );
-}

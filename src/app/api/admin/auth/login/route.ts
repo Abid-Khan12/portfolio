@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       }
 
       const isPassCorrect = await bcrypt.compare(parsedBody.password, user.password);
-      ``;
+
       if (!isPassCorrect) {
          return NextResponse.json(
             { success: false, status: 400, message: "Invalid password" },

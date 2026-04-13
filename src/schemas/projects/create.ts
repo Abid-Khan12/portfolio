@@ -6,10 +6,11 @@ const createProjectSchema = z.object({
    role: z.enum(["Frontend", "MERN"], "Either Frontend OR MERN"),
    githubLink: z.string().min(1, "Github link is required"),
    liveLink: z.string().optional(),
-   techStack: z.array(z.string()),
+   techStack: z.array(z.string()).min(3, "Minimum 3 technology is required"),
    projectImage: z
       .custom<File>()
-      .refine((file) => file.size <= 2097152, "File size must be less than 2 MB"),
+      .refine((file) => file instanceof File, "Project image is required"),
+   // .refine((file) => file.size <= 2097152, "File size must be less than 2 MB"),
 });
 
 export type CreateProjectDataType = z.infer<typeof createProjectSchema>;

@@ -36,10 +36,10 @@ export const handleFetch = async <TResponse>({
       const err = error as AxiosError<ApiError>;
 
       throw {
+         success: err.response?.data.success,
          message: err.response?.data.message,
          status: err.response?.data.status,
          error: err.response?.data.error,
-         isRefreshTokenExpired: err.response?.data.isRefreshTokenExpired ?? false,
       };
    }
 };

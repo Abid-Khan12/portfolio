@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils";
 
 import { useScroll } from "@/hooks/use-scroll";
 
+import MobileNav from "@/components/header/mobile-nav";
 import ThemeToggler from "@/components/theme-toggler";
-import MobileNav from "@/components/mobile-nav";
 import { Button } from "@/components/ui/button";
 
 export const navLinks = [

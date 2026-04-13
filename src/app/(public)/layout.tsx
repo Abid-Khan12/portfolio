@@ -1,6 +1,6 @@
 import { ChildrenProp } from "@/types/type";
 
-import Header from "@/components/header";
+import Header from "@/components/header/header";
 
 const layout = ({ children }: ChildrenProp) => {
    return (

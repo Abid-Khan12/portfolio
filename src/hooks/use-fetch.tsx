@@ -9,7 +9,6 @@ import type { ApiError, ApiResponse, HookProps } from "@/types/type";
 import useAdminContext from "@/context/admin-context";
 
 import { handleFetch } from "@/apis/api";
-import { useRouter } from "next/navigation";
 
 type FetchHookProps = {
    slug?: string;
@@ -17,7 +16,6 @@ type FetchHookProps = {
 } & HookProps;
 
 const useFetch = <TResponse = any,>({ api_key, api_url, slug, params }: FetchHookProps) => {
-   const router = useRouter();
    const queryClient = useQueryClient();
    const { setUser } = useAdminContext();
 
@@ -31,16 +29,25 @@ const useFetch = <TResponse = any,>({ api_key, api_url, slug, params }: FetchHoo
          const { status, message } = query.error;
 
          if (status === 401) {
-            toast.error(message);
+            // clear storage first
             localStorage.removeItem("accessToken");
             localStorage.removeItem("userData");
-            setUser(null);
+
+            // show toast
+            toast.error(message ?? "Session expired. Please login again.");
+
+            // cancel queries before redirect
             queryClient.cancelQueries();
-            router.replace("/admin/auth/login");
-            return;
+            queryClient.clear(); // clear all cached data too
+
+            // clear user state
+            setUser(null);
+
+            // hard redirect — more reliable than router.replace for auth
+            window.location.href = "/admin/login";
          }
       }
-   }, [query.isLoading, query.isError, query.error?.message]);
+   }, [query.isLoading, query.isError, query.error]);
 
    return query;
 };
