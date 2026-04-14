@@ -103,16 +103,17 @@ const MobileNav = () => {
          </motion.div>
 
          {/* Backdrop */}
-         <AnimatePresence>
+         <AnimatePresence onExitComplete={() => (document.body.style.overflow = "")}>
             {open && (
                <motion.div
                   key="backdrop"
-                  className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+                  className="fixed inset-0 z-40 h-screen w-full bg-black/40 backdrop-blur-sm"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.25 }}
                   onClick={() => setOpen(false)}
+                  onAnimationStart={() => (document.body.style.overflow = "hidden")}
                />
             )}
          </AnimatePresence>
@@ -127,8 +128,8 @@ const MobileNav = () => {
                   animate="visible"
                   exit="exit"
                   className={cn(
-                     "fixed top-0 right-0 z-40 h-full w-72",
-                     "bg-background border-l border-border shadow-2xl",
+                     "fixed top-0 right-0 z-40 h-screen w-72",
+                     "bg-background shadow-2xl",
                      "flex flex-col pt-20 px-8 pb-10 gap-8",
                   )}
                >

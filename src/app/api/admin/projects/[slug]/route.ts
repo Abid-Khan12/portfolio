@@ -1,10 +1,11 @@
+import z from "zod";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import z from "zod";
 
-import { removeFromCloudinary, uploadToCloudinary } from "@/lib/cloudinary";
 import connectDB from "@/lib/mongoose";
 import logger from "@/lib/winston";
+import purify from "@/lib/purify";
+import { removeFromCloudinary, uploadToCloudinary } from "@/lib/cloudinary";
 import { verifyAccessToken } from "@/utils/generate-token";
 
 import updateProjectSchema from "@/schemas/projects/update";
@@ -129,6 +130,11 @@ export async function PATCH(
             { status: 400 },
          );
       }
+
+      if (parsedBody.description) {
+      }
+
+      parsedBody.description = purify.sanitize(parsedBody.description);
 
       await connectDB();
 

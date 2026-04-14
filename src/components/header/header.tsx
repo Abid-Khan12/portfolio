@@ -28,8 +28,8 @@ const Header = () => {
 
    return (
       <header
-         className={cn("w-full sticky top-0 z-50 border-transparent border-b", {
-            "border-border bg-background/70 backdrop-blur-sm supports-backdrop-filter:bg-background/50":
+         className={cn("w-full sticky top-0 z-50", {
+            "bg-background/70 backdrop-blur-sm supports-backdrop-filter:bg-background/50":
                scrolled,
          })}
       >

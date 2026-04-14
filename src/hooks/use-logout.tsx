@@ -8,9 +8,9 @@ import useCustomMutation from "@/hooks/use-mutation";
 import useAdminContext from "@/context/admin-context";
 
 const useLogout = () => {
+   const router = useRouter();
    const queryClient = useQueryClient();
    const { setUser } = useAdminContext();
-   const router = useRouter();
 
    const { mutate, ...data } = useCustomMutation({
       api_key: ["logout_mutation"],
@@ -24,17 +24,25 @@ const useLogout = () => {
             {
                onSuccess({ message }) {
                   toast.success(message ?? "Logged out successfully");
+
                   localStorage.removeItem("userData");
                   localStorage.removeItem("accessToken");
+
                   setUser(null);
                   queryClient.clear();
+
                   router.replace("/admin/login");
                },
                onError({ message }) {
                   toast.error(message ?? "Failed to logout. Please try again.");
+
                   localStorage.removeItem("userData");
                   localStorage.removeItem("accessToken");
+
                   setUser(null);
+                  queryClient.clear();
+
+                  router.replace("/admin/login");
                },
             },
          ),

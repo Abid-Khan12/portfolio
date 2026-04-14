@@ -1,9 +1,24 @@
-import React from 'react'
+// Sections
+import AboutSection from "@/components/sections/about/about-section";
+import CapabilitiesSection from "@/components/sections/about/capabilities-section";
+import ExperianceSection from "@/components/sections/about/experiance-section";
+
+import { Separator } from "@/components/ui/separator";
 
 const AboutPage = () => {
-  return (
-    <div>AboutPage</div>
-  )
-}
+   return (
+      <main className="flex flex-col gap-10">
+         <AboutSection />
 
-export default AboutPage
+         <Separator />
+
+         <CapabilitiesSection />
+
+         <Separator />
+
+         <ExperianceSection />
+      </main>
+   );
+};
+
+export default AboutPage;

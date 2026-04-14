@@ -20,7 +20,7 @@ export const extensions = [
       bulletList: { keepMarks: true, keepAttributes: false },
       orderedList: { keepMarks: true, keepAttributes: false },
    }),
-   Placeholder.configure({ placeholder: "Enter post content here" }),
+   Placeholder.configure({ placeholder: "Enter project Description here" }),
    Highlight.configure({ multicolor: false }),
    TextAlign.configure({ types: ["heading", "paragraph"] }),
 ];

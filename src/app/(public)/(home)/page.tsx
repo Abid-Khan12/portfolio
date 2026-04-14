@@ -1,68 +1,23 @@
-import IconButton from "@/components/buttons/icon-button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Instagram, Twitter, Github, LinkedIn } from "@/public/index";
+// Sections
+import HeroSection from "@/components/sections/home/hero-section";
+import AboutMeSection from "@/components/sections/home/aboutme-section";
+import FeaturedProjectsSection from "@/components/sections/home/featured-projects-section";
 
-import Image from "next/image";
+import { Separator } from "@/components/ui/separator";
 
 const page = () => {
    return (
-      <div className="page flex flex-col gap-4 items-center justify-center">
-         <h1 className="font-heading text-5xl">Heading</h1>
-         <p className="text-muted-foreground font-medium text-lg">Lorem ipsum dolor sit amet.</p>
+      <main className="flex flex-col gap-10">
+         <HeroSection />
 
-         <div className="flex items-center gap-3">
-            <IconButton
-               src={Github}
-               alt="github-icon"
-            />
-            <IconButton
-               src={LinkedIn}
-               alt="linkedin-icon"
-               className=""
-            />
-         </div>
+         <Separator />
 
-         <div className="flex items-center gap-4">
-            <Image
-               src={Twitter}
-               alt="twitter-icon"
-               width={32}
-               height={32}
-            />
-            <Image
-               src={Instagram}
-               alt="instagram-icon"
-               width={32}
-               height={32}
-            />
-            <Image
-               src={Github}
-               alt="github-icon"
-               width={32}
-               height={32}
-            />
-            <Image
-               src={LinkedIn}
-               alt="linkedin-icon"
-               width={32}
-               height={32}
-            />
-         </div>
+         <FeaturedProjectsSection />
 
-         <div className="flex flex-col gap-y-3 items-start">
-            <Label
-               htmlFor="input-box"
-               className="w-full"
-            >
-               Input Box
-            </Label>
-            <Input
-               className="w-full"
-               id="input-box"
-            />
-         </div>
-      </div>
+         <Separator />
+
+         <AboutMeSection />
+      </main>
    );
 };
 

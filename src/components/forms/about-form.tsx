@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldGroup } from "@/components/ui/field";
 
 import updateAboutSchema, { UpdateAboutFormData } from "@/schemas/profile/update-about";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type UpdateAboutResponse = {
    about: string;

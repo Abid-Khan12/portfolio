@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongoose";
 import logger from "@/lib/winston";
 import generateSlug from "@/utils/generate-slug";
+import purify from "@/lib/purify";
 import { verifyAccessToken } from "@/utils/generate-token";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 
@@ -61,6 +62,8 @@ export async function POST(request: NextRequest) {
 
       const arrayBuffer = await parsedBody.projectImage.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
+
+      parsedBody.description = purify.sanitize(parsedBody.description);
 
       await connectDB();
 
