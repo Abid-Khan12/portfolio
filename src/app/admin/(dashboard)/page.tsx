@@ -5,7 +5,7 @@ const DashboardPage = () => {
    return (
       <div className="flex flex-col gap-8 overflow-hidden w-full">
          <DashboardStats />
-         <ProjectsTable />
+         <ProjectsTable skeletonLimit={4} />
       </div>
    );
 };

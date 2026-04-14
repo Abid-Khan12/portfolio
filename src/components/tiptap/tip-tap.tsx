@@ -42,10 +42,10 @@ const TipTap = <T extends FieldValues>({ control, name, label, className }: TipT
                      extensions={extensions}
                      editorContainerProps={{
                         className: cn(
-                           "min-h-[180px] w-full bg-background/50 px-4 py-3 text-sm text-foreground overflow-y-auto rounded-b-lg",
+                           "w-full bg-background/50 px-4 py-3 text-sm text-foreground overflow-y-auto rounded-b-lg",
                            // editor area
                            "[&_.tiptap]:outline-none",
-                           "[&_.tiptap]:min-h-[200px]",
+                           "[&_.tiptap]:h-[300px]",
                            "[&_.tiptap]:leading-7",
                            // placeholder
                            "[&_.tiptap_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)]",

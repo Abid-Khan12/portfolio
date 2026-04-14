@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import * as React from "react";
 import Image from "next/image";
 import { Controller, FieldValues } from "react-hook-form";
 import { UploadIcon, XIcon } from "lucide-react";
@@ -10,9 +10,21 @@ import { PrimaryInputProps } from "@/types/type";
 import { Button } from "@/components/ui/button";
 import { Field, FieldContent, FieldError } from "@/components/ui/field";
 
-const ProjectFileField = <T extends FieldValues>({ control, name }: PrimaryInputProps<T>) => {
+type ProjectFieldProps<T extends FieldValues> = { existingUrl?: string | null } & PrimaryInputProps<T>;
+
+const ProjectFileField = <T extends FieldValues>({
+   control,
+   name,
+   existingUrl,
+}: ProjectFieldProps<T>) => {
    const inputRef = React.useRef<HTMLInputElement>(null);
    const [preview, setPreview] = React.useState<string | null>(null);
+
+   React.useEffect(() => {
+      if (existingUrl) {
+         setPreview(existingUrl);
+      }
+   }, [existingUrl]);
 
    return (
       <Controller
@@ -63,7 +75,7 @@ const ProjectFileField = <T extends FieldValues>({ control, name }: PrimaryInput
                            className="gap-1.5"
                            onClick={() => {
                               setPreview(null);
-                              onChange(null);
+                              onChange(undefined);
                               if (inputRef.current) inputRef.current.value = "";
                            }}
                         >

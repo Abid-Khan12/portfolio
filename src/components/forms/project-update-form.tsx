@@ -1,55 +1,82 @@
 "use client";
 
-import { toast } from "sonner";
+import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
+import { IProject } from "@/models/project-model";
+
+import { ArrowLeft } from "lucide-react";
+
+import useFetch from "@/hooks/use-fetch";
 import useCustomMutation from "@/hooks/use-mutation";
 
 import ProjectFileField from "@/components/forms/inputs/project-file-field";
+import TipTap from "@/components/tiptap/tip-tap";
 import ProjectSelect from "@/components/forms/inputs/project-select";
 import ProjectCombobox from "@/components/forms/inputs/project-combobox";
-import TipTap from "@/components/tiptap/tip-tap";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldContent, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 
-import createProjectSchema, { CreateProjectDataType } from "@/schemas/projects/create";
-import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import updateProjectSchema, { UpdateProjectFormData } from "@/schemas/projects/update";
 
-const CreateProjectForm = () => {
+interface UpdteDialogProps {
+   slug: string;
+}
+
+interface ProjectDetailsResponse {
+   project: Pick<
+      IProject,
+      "title" | "description" | "githubLink" | "liveLink" | "projectImage" | "role" | "techStack"
+   >;
+}
+
+export default function ProjectUpdateForm({ slug }: UpdteDialogProps) {
    const router = useRouter();
    const queryClient = useQueryClient();
+
+   const { data, isLoading } = useFetch<ProjectDetailsResponse>({
+      api_key: ["project_details_fetched", slug],
+      api_url: "/admin/projects",
+      slug,
+   });
+
    const {
       handleSubmit,
       reset,
-      register,
       control,
+      register,
+      watch,
       formState: { errors },
-   } = useForm<CreateProjectDataType>({
-      resolver: zodResolver(createProjectSchema),
+   } = useForm<UpdateProjectFormData>({
+      resolver: zodResolver(updateProjectSchema),
       defaultValues: {
-         projectImage: undefined,
          title: "",
          description: "",
-         role: "Frontend",
-         techStack: [],
          githubLink: "",
          liveLink: "",
+         projectImage: undefined,
+         role: "Frontend",
+         techStack: [],
       },
       mode: "all",
    });
 
-   const { mutate, isPending } = useCustomMutation<CreateProjectDataType>({
-      api_key: ["project_create_mutation"],
+   const { title, githubLink, liveLink } = watch();
+
+   const { mutate, isPending } = useCustomMutation({
+      api_key: ["project_update_mutation", slug],
       api_url: "/admin/projects",
    });
 
-   const onSubmit = (values: CreateProjectDataType) => {
+   const onSubmit = (values: UpdateProjectFormData) => {
       const formData = new FormData();
 
       Object.entries(values).forEach(([key, value]) => {
@@ -64,7 +91,7 @@ const CreateProjectForm = () => {
          }
       });
       mutate(
-         { payload: formData },
+         { payload: formData, slug, method: "put" },
          {
             onSuccess({ message }) {
                toast.success(message);
@@ -72,12 +99,7 @@ const CreateProjectForm = () => {
                   queryKey: ["projects_table_fetch"],
                   exact: true,
                });
-               queryClient.refetchQueries({
-                  queryKey: ["dashboard_state"],
-                  exact: true,
-               });
                router.back();
-               reset();
             },
             onError({ message, error }) {
                if (!(typeof error === "string") && error) {
@@ -87,14 +109,80 @@ const CreateProjectForm = () => {
 
                   return;
                }
-               toast.error(message ?? "Error while creating project");
+               toast.error(message ?? "Error while updating the project");
             },
          },
       );
    };
 
+   React.useEffect(() => {
+      if (!isLoading && data?.data) {
+         const projectDetails = data.data.project;
+         const { projectImage, ...projectData } = projectDetails;
+         reset(projectData);
+      }
+   }, [data, isLoading]);
+
+   if (isLoading) {
+      return (
+         <Card className="w-full sm:max-w-4xl">
+            <CardHeader>
+               <CardTitle className="text-3xl">Edit Project</CardTitle>
+               <CardDescription>
+                  Make changes to your project here. Click save when you&apos;re done.
+               </CardDescription>
+            </CardHeader>
+            <CardContent>
+               <FieldGroup className="gap-y-6.5">
+                  <Skeleton className="h-40" />
+                  <Field className="relative">
+                     <FieldLabel htmlFor="title">Project title</FieldLabel>
+                     <FieldContent>
+                        <Skeleton className="h-10" />
+                     </FieldContent>
+                  </Field>
+                  <Field className="relative">
+                     <FieldLabel htmlFor="title">Project description</FieldLabel>
+                     <FieldContent>
+                        <Skeleton className="h-[300px]" />
+                     </FieldContent>
+                  </Field>
+                  <div className="grid md:grid-cols-2 grid-cols-1 gap-4 mt-1">
+                     <Field className="relative">
+                        <FieldLabel htmlFor="title">Project role</FieldLabel>
+                        <FieldContent>
+                           <Skeleton className="h-10" />
+                        </FieldContent>
+                     </Field>
+                     <Field className="relative">
+                        <FieldLabel htmlFor="title">Project tech stack</FieldLabel>
+                        <FieldContent>
+                           <Skeleton className="h-10" />
+                        </FieldContent>
+                     </Field>
+                  </div>
+                  <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+                     <Field className="relative">
+                        <FieldLabel htmlFor="title">Project github Link</FieldLabel>
+                        <FieldContent>
+                           <Skeleton className="h-10" />
+                        </FieldContent>
+                     </Field>
+                     <Field className="relative">
+                        <FieldLabel htmlFor="title">Project live link</FieldLabel>
+                        <FieldContent>
+                           <Skeleton className="h-10" />
+                        </FieldContent>
+                     </Field>
+                  </div>
+               </FieldGroup>
+            </CardContent>
+         </Card>
+      );
+   }
+
    return (
-      <Card className="sm:max-w-4xl w-full h-fit mx-auto">
+      <Card className="w-full sm:max-w-4xl">
          <CardHeader className="relative">
             <Button
                variant={"outline"}
@@ -103,10 +191,9 @@ const CreateProjectForm = () => {
             >
                <ArrowLeft />
             </Button>
-            <CardTitle className="text-3xl">Add New Project</CardTitle>
+            <CardTitle className="text-3xl">Edit Project</CardTitle>
             <CardDescription>
-               Fill in the details below to add a new project to your portfolio. All fields marked
-               as required must be completed before submitting.
+               Make changes to your project here. Click save when you&apos;re done.
             </CardDescription>
          </CardHeader>
          <CardContent>
@@ -115,6 +202,7 @@ const CreateProjectForm = () => {
                   <ProjectFileField
                      control={control}
                      name="projectImage"
+                     existingUrl={data?.data.project.projectImage.url ?? null}
                   />
                   <Field className="relative">
                      <FieldLabel htmlFor="title">Project title</FieldLabel>
@@ -123,6 +211,7 @@ const CreateProjectForm = () => {
                            id="title"
                            placeholder="E-commerce etc."
                            aria-invalid={!!errors.title}
+                           value={title}
                            {...register("title")}
                         />
                      </FieldContent>
@@ -136,6 +225,7 @@ const CreateProjectForm = () => {
                      control={control}
                      name="description"
                      label="Project description"
+                     className=""
                   />
                   <div className="grid md:grid-cols-2 grid-cols-1 gap-4 mt-1">
                      <ProjectSelect
@@ -146,7 +236,7 @@ const CreateProjectForm = () => {
                      <ProjectCombobox
                         control={control}
                         name="techStack"
-                        label="Project techStack"
+                        label="Project tech stack"
                      />
                   </div>
                   <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
@@ -156,8 +246,9 @@ const CreateProjectForm = () => {
                            <Input
                               id="github"
                               placeholder="Repo Link"
-                              {...register("githubLink")}
+                              value={githubLink}
                               aria-invalid={!!errors.githubLink}
+                              {...register("githubLink")}
                            />
                         </FieldContent>
                         {errors.githubLink && (
@@ -172,6 +263,7 @@ const CreateProjectForm = () => {
                            <Input
                               id="livelink"
                               placeholder="Live link (optional)"
+                              value={liveLink}
                               {...register("liveLink")}
                            />
                         </FieldContent>
@@ -191,6 +283,4 @@ const CreateProjectForm = () => {
          </CardContent>
       </Card>
    );
-};
-
-export default CreateProjectForm;
+}

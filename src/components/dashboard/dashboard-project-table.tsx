@@ -11,9 +11,15 @@ import {
 
 import { IProject } from "@/models/project-model";
 
+import { FolderKanbanIcon, SearchIcon } from "lucide-react";
+
+import useFetch from "@/hooks/use-fetch";
+
 import { cn } from "@/lib/utils";
 
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import projectColumns from "@/components/dashboard/project-column";
+import SearchBox from "@/components/dashboard/project-table-search-box";
+
 import { Button } from "@/components/ui/button";
 import {
    Table,
@@ -23,12 +29,7 @@ import {
    TableHeader,
    TableRow,
 } from "@/components/ui/table";
-
-import projectColumns from "@/components/dashboard/project-column";
-import SearchBox from "@/components/dashboard/project-table-search-box";
-import useFetch from "@/hooks/use-fetch";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FolderKanbanIcon, SearchIcon } from "lucide-react";
 
 export type ColumnType = Pick<
    IProject,
@@ -145,7 +146,7 @@ const ProjectsTable = ({
                   {isLoading ? (
                      <TableSkeleton
                         cols={projectColumns.length}
-                        rows={limit}
+                        rows={skeletonLimit}
                      />
                   ) : projects.length === 0 ? (
                      <TableRow>

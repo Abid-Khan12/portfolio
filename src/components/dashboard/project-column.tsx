@@ -10,18 +10,18 @@ import { format } from "date-fns";
 
 import { ColumnType } from "./dashboard-project-table";
 
-import { Github, LinkedIn } from "@/public";
-
 import {
    CodeIcon,
    ChevronDownIcon,
    MoreHorizontalIcon,
    PencilIcon,
    Trash2Icon,
+   Globe,
+   GitBranchIcon,
 } from "lucide-react";
 
 import ProjectDeleteConfirmationDialog from "@/components/dialogs/delete-confirmation-dialog";
-import UpdateDrawerDialog from "@/components/drawer/project-update-drawer";
+
 import { Button } from "@/components/ui/button";
 import {
    DropdownMenu,
@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 // ── Tech Stack Popover ───────────────────────────────────────────────────────
 const TechStackPopover = ({ techs }: { techs: string[] }) => {
@@ -119,35 +120,46 @@ const projectColumns: ColumnDef<ColumnType>[] = [
       header: "Links",
       cell: ({ row }) => (
          <div className="flex items-center gap-2 shrink-0">
-            <Link
-               href={row.original.githubLink}
-               target="_blank"
-               rel="noopener noreferrer"
-               className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
-            >
-               <Image
-                  src={Github}
-                  alt="github-icon"
-                  className="size-5"
-                  width={22}
-                  height={22}
-               />
-            </Link>
+            <Tooltip>
+               <TooltipTrigger>
+                  <Button
+                     nativeButton={false}
+                     render={
+                        <Link
+                           href={row.original.githubLink}
+                           target="_blank"
+                           rel="noopener noreferrer"
+                        />
+                     }
+                     variant={"outline"}
+                     size={"icon"}
+                  >
+                     <GitBranchIcon />
+                  </Button>
+               </TooltipTrigger>
+               <TooltipContent>Github Link</TooltipContent>
+            </Tooltip>
+
             {row.original.liveLink && (
-               <Link
-                  href={row.original.liveLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className=" text-muted-foreground hover:text-foreground transition-colors shrink-0"
-               >
-                  <Image
-                     src={LinkedIn}
-                     alt="LinkedIn-icon"
-                     className="size-5"
-                     width={22}
-                     height={22}
-                  />
-               </Link>
+               <Tooltip>
+                  <TooltipTrigger>
+                     <Button
+                        nativeButton={false}
+                        render={
+                           <Link
+                              href={row.original.liveLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                           />
+                        }
+                        variant={"outline"}
+                        size={"icon"}
+                     >
+                        <Globe />
+                     </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Live Link</TooltipContent>
+               </Tooltip>
             )}
          </div>
       ),
@@ -176,7 +188,7 @@ const projectColumns: ColumnDef<ColumnType>[] = [
       header: "Actions",
       cell: ({ row }) => {
          const [open, setOpen] = useState(false);
-         const [showUpdateDrawer, setShowUpdateDrawer] = useState(false);
+
          const { slug } = row.original;
 
          return (
@@ -197,10 +209,11 @@ const projectColumns: ColumnDef<ColumnType>[] = [
                      align="end"
                      className={"space-y-2"}
                   >
-                     <DropdownMenuItem onClick={() => setShowUpdateDrawer(true)}>
+                     <DropdownMenuItem render={<Link href={`/admin/projects/update/${slug}`} />}>
                         <PencilIcon className="size-3.5" />
                         Edit
                      </DropdownMenuItem>
+
                      <DropdownMenuItem
                         variant="destructive"
                         onClick={() => setOpen(true)}
@@ -214,11 +227,6 @@ const projectColumns: ColumnDef<ColumnType>[] = [
                <ProjectDeleteConfirmationDialog
                   open={open}
                   setOpen={setOpen}
-                  slug={slug}
-               />
-               <UpdateDrawerDialog
-                  open={showUpdateDrawer}
-                  setOpen={setShowUpdateDrawer}
                   slug={slug}
                />
             </>

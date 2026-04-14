@@ -13,4 +13,6 @@ const updateProjectSchema = z.object({
       .optional(),
 });
 
+export type UpdateProjectFormData = z.infer<typeof updateProjectSchema>;
+
 export default updateProjectSchema;
