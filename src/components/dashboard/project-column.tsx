@@ -172,7 +172,17 @@ const projectColumns: ColumnDef<ColumnType>[] = [
    {
       accessorKey: "role",
       header: "Role",
-      cell: ({ getValue }) => <Badge>{getValue<string>() ?? "—"}</Badge>,
+      cell: ({ getValue }) => {
+         const role = getValue<string>();
+         return (
+            <Badge
+               variant={role === "Frontend" ? "default" : "secondary"}
+               className="px-3"
+            >
+               {role ?? "-"}
+            </Badge>
+         );
+      },
    },
    {
       accessorKey: "createdAt",

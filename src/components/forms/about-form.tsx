@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldGroup } from "@/components/ui/field";
 
 import updateAboutSchema, { UpdateAboutFormData } from "@/schemas/profile/update-about";
+import { Skeleton } from "../ui/skeleton";
 
 type UpdateAboutResponse = {
    about: string;
@@ -69,11 +70,33 @@ const AboutMeForm = () => {
       }
    }, [data, isLoading]);
 
+   if (isLoading) {
+      return (
+         <Card className="sm:max-w-4xl w-full">
+            <CardHeader>
+               <CardTitle className="text-2xl">About Me</CardTitle>
+               <CardDescription>
+                  Write a brief introduction about yourself — your background, skills, and what
+                  you're passionate about. This will be displayed on your public portfolio.
+               </CardDescription>
+            </CardHeader>
+            <CardContent>
+               <FieldGroup>
+                  <Skeleton className="h-[400px]" />
+               </FieldGroup>
+            </CardContent>
+         </Card>
+      );
+   }
+
    return (
       <Card className="sm:max-w-4xl w-full">
          <CardHeader>
-            <CardTitle className="text-2xl"></CardTitle>
-            <CardDescription></CardDescription>
+            <CardTitle className="text-2xl">About Me</CardTitle>
+            <CardDescription>
+               Write a brief introduction about yourself — your background, skills, and what you're
+               passionate about. This will be displayed on your public portfolio.
+            </CardDescription>
          </CardHeader>
          <CardContent>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -88,7 +111,7 @@ const AboutMeForm = () => {
                      <Button
                         type="submit"
                         size={"lg"}
-                        disabled={isPending || isLoading}
+                        disabled={isPending}
                      >
                         {isLoading
                            ? "Fetching About Me"

@@ -1,17 +1,18 @@
 "use client";
 
 import StarterKit from "@tiptap/starter-kit";
-import { EditorProvider } from "@tiptap/react";
-import { Controller, type FieldValues } from "react-hook-form";
 import Placeholder from "@tiptap/extension-placeholder";
 import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
+import { EditorProvider } from "@tiptap/react";
+import { Controller, type FieldValues } from "react-hook-form";
 
 import type { PrimaryInputProps } from "@/types/type";
 
 import { cn } from "@/lib/utils";
 
 import Toolbar from "@/components/tiptap/tool-bar";
+
 import { Field, FieldContent, FieldError, FieldLabel } from "@/components/ui/field";
 
 export const extensions = [

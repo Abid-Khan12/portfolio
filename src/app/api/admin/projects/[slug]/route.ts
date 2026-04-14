@@ -27,7 +27,6 @@ type UpdateData = Partial<
 export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
    try {
       const accessToken = (await cookies()).get("accessToken")?.value;
-      const { slug } = await params;
 
       if (!accessToken) {
          logger.warn("Someone tried to get projects");
@@ -48,6 +47,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       }
 
       const { userId } = decoded;
+      const { slug } = await params;
 
       await connectDB();
 
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       );
    } catch (error) {
       const err = error as Error;
-      logger.error("Projects GET Api Error : ", { ...err });
+      logger.error("Projects GET Api Error : ", { message: err.message });
 
       return NextResponse.json(
          { success: false, status: 500, message: "Internal server error", error: err.message },
@@ -188,7 +188,7 @@ export async function PATCH(
       );
    } catch (error) {
       const err = error as Error;
-      logger.error("Projects GET Api Error : ", { ...err });
+      logger.error("Projects GET Api Error : ", { message: err.message });
 
       return NextResponse.json(
          { success: false, status: 500, message: "Internal server error", error: err.message },
@@ -260,7 +260,7 @@ export async function DELETE(
    } catch (error) {
       const err = error as Error;
 
-      logger.error("Delete Project API Error : ", { error: err });
+      logger.error("Delete Project API Error : ", { message: err.message });
       return NextResponse.json(
          { success: false, status: 500, message: "Internal server error", error: err.message },
          { status: 500 },
