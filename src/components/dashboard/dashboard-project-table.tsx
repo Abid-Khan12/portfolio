@@ -79,7 +79,7 @@ const ProjectsTable = ({
 }: {
    limit?: number;
    skeletonLimit?: number;
-   api_key: string;
+   api_key?: string;
 }) => {
    const [offset, setOffset] = React.useState(0);
    const { data, isLoading } = useFetch<ProjectTableFetch>({
