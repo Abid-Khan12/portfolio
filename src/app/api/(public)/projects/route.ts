@@ -13,12 +13,15 @@ export async function GET(request: NextRequest) {
 
       const offset = parseInt((searchParams.get("offset") as string) ?? env.QUERY_OFFSET);
       const limit = parseInt((searchParams.get("limit") as string) ?? env.QUERY_LIMIT);
+      const sortByRole = (searchParams.get("sortByRole") as string) ?? "";
 
       await connectDB();
 
-      const totalProject = await ProjectModel.countDocuments();
+      const totalProjects = await ProjectModel.countDocuments();
 
-      const projects = await ProjectModel.find({})
+      const projects = await ProjectModel.find({
+         ...(sortByRole && { role: sortByRole }),
+      })
          .select("-__v -updatedAt -_id")
          .limit(limit)
          .skip(offset)
@@ -35,7 +38,7 @@ export async function GET(request: NextRequest) {
             message: "Project fetched successfully",
             data: {
                projects,
-               total: totalProject,
+               total: totalProjects,
                limit,
                offset,
             },

@@ -20,7 +20,7 @@ export const extensions = [
       bulletList: { keepMarks: true, keepAttributes: false },
       orderedList: { keepMarks: true, keepAttributes: false },
    }),
-   Placeholder.configure({ placeholder: "Enter project Description here" }),
+   Placeholder.configure({ placeholder: "Enter content here" }),
    Highlight.configure({ multicolor: false }),
    TextAlign.configure({ types: ["heading", "paragraph"] }),
 ];
@@ -55,15 +55,15 @@ const TipTap = <T extends FieldValues>({ control, name, label, className }: TipT
                            "[&_.tiptap_p.is-editor-empty:first-child::before]:pointer-events-none",
                            "[&_.tiptap_p.is-editor-empty:first-child::before]:h-0",
                            // headings
-                           "[&_.tiptap_h1]:font-heading [&_.tiptap_h1]:text-2xl [&_.tiptap_h1]:font-bold [&_.tiptap_h1]:mt-6 [&_.tiptap_h1]:mb-3",
-                           "[&_.tiptap_h2]:font-heading [&_.tiptap_h2]:text-xl [&_.tiptap_h2]:font-semibold [&_.tiptap_h2]:mt-5 [&_.tiptap_h2]:mb-2",
-                           "[&_.tiptap_h3]:font-heading [&_.tiptap_h3]:text-lg [&_.tiptap_h3]:font-semibold [&_.tiptap_h3]:mt-4 [&_.tiptap_h3]:mb-2",
+                           "[&_.tiptap_h1]:font-heading [&_.tiptap_h1]:mt-3 [&_.tiptap_h1]:text-2xl [&_.tiptap_h1]:mb-2 [&_.tiptap_h1]:font-semibold [&_.tiptap_h1]:tracking-wide",
+                           "[&_.tiptap_h2]:font-heading [&_.tiptap_h2]:text-xl [&_.tiptap_h2]:font-semibold [&_.tiptap_h2]:mt-3 [&_.tiptap_h2]:mb-2 [&_.tiptap_h2]:tracking-wide",
+                           "[&_.tiptap_h3]:font-heading [&_.tiptap_h3]:text-lg [&_.tiptap_h3]:font-semibold [&_.tiptap_h3]:mt-4 [&_.tiptap_h3]:mb-2 [&_.tiptap_h3]:tracking-wide",
                            // paragraph
-                           "[&_.tiptap_p]:mb-3",
+                           "[&_.tiptap_p]:mb-2",
                            // lists
-                           "[&_.tiptap_ul]:list-disc [&_.tiptap_ul]:pl-6 [&_.tiptap_ul]:mb-3",
-                           "[&_.tiptap_ol]:list-decimal [&_.tiptap_ol]:pl-6 [&_.tiptap_ol]:mb-3",
-                           "[&_.tiptap_li]:mb-1",
+                           "[&_.tiptap_ul]:list-disc [&_.tiptap_ul]:pl-3 [&_.tiptap_ul]:mb-2",
+                           "[&_.tiptap_ol]:list-decimal [&_.tiptap_ol]:pl-3 [&_.tiptap_ol]:mb-2",
+                           "[&_.tiptap_li]:mb-1.5",
                            // blockquote
                            "[&_.tiptap_blockquote]:border-l-[3px] [&_.tiptap_blockquote]:border-primary",
                            "[&_.tiptap_blockquote]:pl-4 [&_.tiptap_blockquote]:my-4",

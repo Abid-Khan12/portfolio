@@ -1,6 +1,6 @@
-import Github from "./dark-github-icon.svg";
-import LinkedIn from "./dark-linkedin-icon.svg";
-import Instagram from "./dark-instagram-icon.svg";
-import Twitter from "./dark-twitter-icon.svg";
+import Github from "./github-icon.svg";
+import LinkedIn from "./linkedin-icon.svg";
 
-export { Github, LinkedIn, Instagram, Twitter };
+import HeroImage from "./hero-image.webp";
+
+export { Github, LinkedIn, HeroImage };

@@ -1,9 +1,11 @@
-import React from 'react'
+import AllProjectsSections from "@/components/sections/projects/all-projects-section";
 
 const ProjectPage = () => {
-  return (
-    <div>ProjectPage</div>
-  )
-}
+   return (
+      <main className="flex flex-col gap-10">
+         <AllProjectsSections />
+      </main>
+   );
+};
 
-export default ProjectPage
+export default ProjectPage;

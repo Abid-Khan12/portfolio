@@ -98,7 +98,7 @@ const CreateProjectForm = () => {
          <CardHeader className="relative">
             <Button
                variant={"outline"}
-               className="sticky z-20 left-0 top-0 w-fit"
+               className="sticky z-20 left-0 top-0 w-fit mb-2"
                onClick={() => router.back()}
             >
                <ArrowLeft />

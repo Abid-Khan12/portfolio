@@ -1,5 +1,7 @@
 "use client";
 
+import { useCurrentEditor, useEditorState } from "@tiptap/react";
+
 import {
    Bold,
    Italic,
@@ -18,7 +20,8 @@ import {
    Redo,
    ChevronDown,
 } from "lucide-react";
-import { useCurrentEditor } from "@tiptap/react";
+
+import { cn } from "@/lib/utils";
 
 import { Toggle } from "@/components/ui/toggle";
 import { Separator } from "@/components/ui/separator";
@@ -36,7 +39,6 @@ const HEADINGS = [
    { label: "Heading 1", value: 1 },
    { label: "Heading 2", value: 2 },
    { label: "Heading 3", value: 3 },
-   { label: "Heading 4", value: 4 },
 ];
 
 const ALIGNMENTS = [
@@ -82,12 +84,21 @@ const Toolbar = () => {
 
    if (!editor) return null;
 
-   const currentHeading = HEADINGS.find((h) =>
-      h.value === 0 ? editor.isActive("paragraph") : editor.isActive("heading", { level: h.value }),
-   );
+   const { currentHeading, currentAlignment } = useEditorState({
+      editor,
+      selector: ({ editor }) => {
+         const currentHeading = HEADINGS.find((h) =>
+            h.value === 0
+               ? editor.isActive("paragraph")
+               : editor.isActive("heading", { level: h.value }),
+         );
 
-   const currentAlignment =
-      ALIGNMENTS.find((a) => editor.isActive({ textAlign: a.value })) ?? ALIGNMENTS[0];
+         const currentAlignment =
+            ALIGNMENTS.find((a) => editor.isActive({ textAlign: a.value })) ?? ALIGNMENTS[0];
+
+         return { currentHeading, currentAlignment };
+      },
+   });
 
    const AlignIcon = currentAlignment.icon;
 
@@ -155,25 +166,36 @@ const Toolbar = () => {
                />
                <TooltipContent>Text style</TooltipContent>
             </Tooltip>
+
             <DropdownMenuContent>
-               {HEADINGS.map(({ label, value }) => (
-                  <DropdownMenuItem
-                     key={value}
-                     onMouseDown={(e) => {
-                        e.preventDefault(); // ✅ prevents editor blur
-                        value === 0
-                           ? editor.chain().focus().setParagraph().run()
-                           : editor
-                                .chain()
-                                .focus()
-                                .toggleHeading({ level: value as 1 | 2 | 3 | 4 })
-                                .run();
-                     }}
-                     className="gap-2"
-                  >
-                     {label}
-                  </DropdownMenuItem>
-               ))}
+               {HEADINGS.map(({ label, value }) => {
+                  const isActive =
+                     value === 0
+                        ? editor.isActive("paragraph")
+                        : editor.isActive("heading", { level: value });
+
+                  return (
+                     <DropdownMenuItem
+                        key={value}
+                        onMouseDown={(e) => {
+                           e.preventDefault();
+
+                           if (value === 0) {
+                              editor.chain().focus().setParagraph().run();
+                           } else {
+                              editor
+                                 .chain()
+                                 .focus()
+                                 .toggleHeading({ level: value as 1 | 2 | 3 | 4 })
+                                 .run();
+                           }
+                        }}
+                        className={cn("gap-2", isActive && "bg-accent text-accent-foreground")}
+                     >
+                        {label}
+                     </DropdownMenuItem>
+                  );
+               })}
             </DropdownMenuContent>
          </DropdownMenu>
 

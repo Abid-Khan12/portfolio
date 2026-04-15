@@ -29,9 +29,10 @@ const useLogout = () => {
                   localStorage.removeItem("accessToken");
 
                   setUser(null);
-                  queryClient.clear();
-
+                  
                   router.replace("/admin/login");
+
+                  queryClient.clear();
                },
                onError({ message }) {
                   toast.error(message ?? "Failed to logout. Please try again.");
@@ -40,9 +41,10 @@ const useLogout = () => {
                   localStorage.removeItem("accessToken");
 
                   setUser(null);
-                  queryClient.clear();
 
                   router.replace("/admin/login");
+
+                  queryClient.clear();
                },
             },
          ),

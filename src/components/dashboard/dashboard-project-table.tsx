@@ -1,13 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-   useReactTable,
-   getCoreRowModel,
-   getFilteredRowModel,
-   getPaginationRowModel,
-   flexRender,
-} from "@tanstack/react-table";
+import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table";
 
 import { IProject } from "@/models/project-model";
 
@@ -18,7 +12,6 @@ import useFetch from "@/hooks/use-fetch";
 import { cn } from "@/lib/utils";
 
 import projectColumns from "@/components/dashboard/project-column";
-import SearchBox from "@/components/dashboard/project-table-search-box";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +23,7 @@ import {
    TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export type ColumnType = Pick<
    IProject,
@@ -46,6 +40,7 @@ export type ColumnType = Pick<
 
 type ProjectTableFetch = {
    projects: ColumnType[];
+   total: number;
 };
 
 // ── Table skeleton ────────────────────────────────────────────────────────────
@@ -54,7 +49,10 @@ const TableSkeleton = ({ cols, rows = 5 }: { cols: number; rows?: number }) => (
       {Array.from({ length: rows }).map((_, i) => (
          <TableRow key={i}>
             {Array.from({ length: cols }).map((_, j) => (
-               <TableCell key={j}>
+               <TableCell
+                  key={j}
+                  className="py-3"
+               >
                   {j === 0 ? (
                      <div className="flex items-center gap-4">
                         <Skeleton className="shrink-0 w-30 h-17 rounded-md" />
@@ -77,124 +75,106 @@ const TableSkeleton = ({ cols, rows = 5 }: { cols: number; rows?: number }) => (
 const ProjectsTable = ({
    limit = 5,
    skeletonLimit = 4,
+   api_key = "projects_table_fetch",
 }: {
    limit?: number;
    skeletonLimit?: number;
+   api_key: string;
 }) => {
-   const [globalFilter, setGlobalFilter] = React.useState("");
+   const [offset, setOffset] = React.useState(0);
    const { data, isLoading } = useFetch<ProjectTableFetch>({
-      api_key: ["projects_table_fetch"],
+      api_key: [api_key, offset],
       api_url: "/admin/projects",
+      params: {
+         limit: limit,
+         offset,
+      },
    });
 
    const projects = data?.data.projects ?? [];
+   const totalProjects = data?.data.total ?? 0;
 
    const table = useReactTable({
       data: projects,
       columns: projectColumns,
-      state: {
-         globalFilter,
-      },
-      onGlobalFilterChange: setGlobalFilter,
       getCoreRowModel: getCoreRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      initialState: {
-         pagination: {
-            pageSize: limit,
-         },
-      },
    });
 
-   const { pageIndex, pageSize } = table.getState().pagination;
-   const totalRows = table.getFilteredRowModel().rows.length;
-   const from = totalRows === 0 ? 0 : pageIndex * pageSize + 1;
-   const to = Math.min((pageIndex + 1) * pageSize, totalRows);
+   const totalPages = Math.ceil(totalProjects / limit);
+   const currentPage = Math.floor(offset / limit); // 0-indexed
+   const from = totalProjects === 0 ? 0 : offset + 1;
+   const to = Math.min(offset + limit, totalProjects);
 
    return (
-      <div className="flex flex-col gap-3">
-         {/* toolbar */}
-         <div className="flex items-center justify-between">
-            <h2 className="font-heading text-lg tracking-wide">Projects</h2>
-            <SearchBox
-               value={globalFilter}
-               onChange={setGlobalFilter}
-            />
-         </div>
-
+      <div className="flex flex-col gap-3 h-full">
          {/* table */}
-
          <div className="rounded-lg border border-border w-full min-w-0">
-            <Table>
-               <TableHeader>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                     <TableRow
-                        key={headerGroup.id}
-                        className="bg-muted/50 hover:bg-muted/50"
-                     >
-                        {headerGroup.headers.map((header) => (
-                           <TableHead key={header.id}>
-                              {header.isPlaceholder
-                                 ? null
-                                 : flexRender(header.column.columnDef.header, header.getContext())}
-                           </TableHead>
-                        ))}
-                     </TableRow>
-                  ))}
-               </TableHeader>
-               <TableBody>
-                  {isLoading ? (
-                     <TableSkeleton
-                        cols={projectColumns.length}
-                        rows={skeletonLimit}
-                     />
-                  ) : projects.length === 0 ? (
-                     <TableRow>
-                        <TableCell
-                           colSpan={projectColumns.length}
-                           className="text-center text-muted-foreground py-16"
-                        >
-                           <div className="flex flex-col items-center gap-2">
-                              <FolderKanbanIcon className="size-8 text-muted-foreground/50" />
-                              <p className="text-sm">No projects yet.</p>
-                           </div>
-                        </TableCell>
-                     </TableRow>
-                  ) : table.getRowModel().rows.length === 0 ? (
-                     <TableRow>
-                        <TableCell
-                           colSpan={projectColumns.length}
-                           className="text-center text-muted-foreground py-16"
-                        >
-                           <div className="flex flex-col items-center gap-2">
-                              <SearchIcon className="size-8 text-muted-foreground/50" />
-                              <p className="text-sm">No results for your search.</p>
-                           </div>
-                        </TableCell>
-                     </TableRow>
-                  ) : (
-                     table.getRowModel().rows.map((row) => (
+            <ScrollArea>
+               <Table>
+                  <TableHeader>
+                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow
-                           key={row.id}
-                           className="group"
+                           key={headerGroup.id}
+                           className="bg-muted/50 hover:bg-muted/50"
                         >
-                           {row.getVisibleCells().map((cell) => (
-                              <TableCell key={cell.id}>
-                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                              </TableCell>
+                           {headerGroup.headers.map((header) => (
+                              <TableHead key={header.id}>
+                                 {header.isPlaceholder
+                                    ? null
+                                    : flexRender(
+                                         header.column.columnDef.header,
+                                         header.getContext(),
+                                      )}
+                              </TableHead>
                            ))}
                         </TableRow>
-                     ))
-                  )}
-               </TableBody>
-            </Table>
+                     ))}
+                  </TableHeader>
+                  <TableBody>
+                     {isLoading ? (
+                        <TableSkeleton
+                           cols={projectColumns.length}
+                           rows={skeletonLimit}
+                        />
+                     ) : projects.length === 0 ? (
+                        <TableRow>
+                           <TableCell
+                              colSpan={projectColumns.length}
+                              className="text-center text-muted-foreground py-16"
+                           >
+                              <div className="flex flex-col items-center gap-2">
+                                 <FolderKanbanIcon className="size-8 text-muted-foreground/50" />
+                                 <p className="text-sm">No projects yet.</p>
+                              </div>
+                           </TableCell>
+                        </TableRow>
+                     ) : (
+                        table.getRowModel().rows.map((row) => (
+                           <TableRow
+                              key={row.id}
+                              className="group"
+                           >
+                              {row.getVisibleCells().map((cell) => (
+                                 <TableCell
+                                    key={cell.id}
+                                    className="py-3"
+                                 >
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                 </TableCell>
+                              ))}
+                           </TableRow>
+                        ))
+                     )}
+                  </TableBody>
+               </Table>
+            </ScrollArea>
          </div>
 
          {/* pagination */}
-         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-sm text-muted-foreground">
+         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 text-sm text-muted-foreground flex-1">
             {/* count */}
             <p className="text-center sm:text-left">
-               {totalRows === 0 ? "No results" : `Showing ${from}–${to} of ${totalRows}`}
+               {totalProjects === 0 ? "No results" : `Showing ${from}–${to} of ${totalProjects}`}
             </p>
 
             <div className="flex items-center justify-between sm:justify-end gap-2">
@@ -202,23 +182,24 @@ const ProjectsTable = ({
                   variant="outline"
                   size="sm"
                   className="text-foreground"
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
+                  onClick={() => setOffset((prev) => Math.max(0, prev - limit))}
+                  disabled={offset === 0 || isLoading}
                >
                   Previous
                </Button>
 
-               {/* page numbers — hidden on very small screens, show on sm+ */}
-               <div className="hidden xs:flex sm:flex items-center gap-1">
-                  {Array.from({ length: table.getPageCount() }, (_, i) => (
+               {/* page numbers — sm+ */}
+               <div className="hidden sm:flex items-center gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => (
                      <Button
                         key={i}
-                        variant={pageIndex === i ? "secondary" : "ghost"}
+                        variant={currentPage === i ? "secondary" : "ghost"}
                         size="icon-sm"
-                        onClick={() => table.setPageIndex(i)}
+                        onClick={() => setOffset(i * limit)}
+                        disabled={isLoading}
                         className={cn(
                            "size-7 text-xs",
-                           pageIndex === i && "text-primary font-bold",
+                           currentPage === i && "text-foreground font-bold",
                         )}
                      >
                         {i + 1}
@@ -226,17 +207,17 @@ const ProjectsTable = ({
                   ))}
                </div>
 
-               {/* mobile: show current page / total instead of buttons */}
+               {/* mobile: current / total */}
                <span className="flex sm:hidden text-xs font-medium text-foreground">
-                  {pageIndex + 1} / {table.getPageCount()}
+                  {currentPage + 1} / {totalPages || 1}
                </span>
 
                <Button
                   variant="outline"
                   size="sm"
                   className="text-foreground"
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
+                  onClick={() => setOffset((prev) => prev + limit)}
+                  disabled={offset + limit >= totalProjects || isLoading}
                >
                   Next
                </Button>

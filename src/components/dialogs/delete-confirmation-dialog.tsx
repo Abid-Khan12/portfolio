@@ -33,7 +33,11 @@ const ProjectDeleteConfirmationDialog = ({ open, setOpen, slug }: ConfirmationDi
             onError({ message }) {
                toast.error(message);
                queryClient.refetchQueries({
-                  queryKey: ["projects_table_fetch", "dashboard_state"],
+                  queryKey: ["projects_table_fetch"],
+                  exact: true,
+               });
+               queryClient.refetchQueries({
+                  queryKey: ["dashboard_state"],
                   exact: true,
                });
             },

@@ -1,11 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 
-import { Github, LinkedIn } from "@/public";
-import { DownloadIcon } from "lucide-react";
+import { Github, HeroImage, LinkedIn } from "@/public";
 
 import IconButton from "@/components/buttons/icon-button";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import ResumeButton from "@/components/buttons/resume-button";
 
 const HeroSection = () => {
    return (
@@ -14,23 +13,15 @@ const HeroSection = () => {
             {/* Content-Part */}
             <div className="flex flex-col items-start md:justify-center md:gap-5 gap-3 max-w-[554px]">
                <p className="text-muted-foreground font-medium text-sm md:order-1 order-2">
-                  A Sydney based front-end developer passionate about building accessible and user
-                  friendly websites.
+                  Frontend Developer based in Karachi, focused on building scalable,
+                  high-performance, and user-friendly web experiences.
                </p>
                <h1 className="font-heading xl:text-8xl lg:text-7xl sm:text-6xl text-5xl font-bold md:order-2 order-1">
                   hi, i am <br /> Abid Shah Khan
                </h1>
                <div className="flex items-center md:gap-4 gap-2 md:order-3 order-3">
-                  <Button
-                     nativeButton={false}
-                     render={<a href="#" />}
-                     className={
-                        "rounded-full sm:w-[187px] h-[48px] md:h-[54px] font-bold md:gap-x-5 gap-3 uppercase text-xs "
-                     }
-                  >
-                     <span>Download Resume</span>
-                     <DownloadIcon className="size-5" />
-                  </Button>
+                  <ResumeButton />
+
                   <Link
                      href={"https://www.linkedin.com/in/abid-shah-khan"}
                      target="_blank"
@@ -55,14 +46,15 @@ const HeroSection = () => {
             </div>
 
             {/* Image-Part */}
-            <div className="relative w-full md:h-[600px] h-[300px] border rounded-xl">
-               {/* <Image
-                  src={""}
-                  alt="hero-image"
-                  className="object-cover"
-                  sizes="100%"
-                  fill
-               /> */}
+            <div className="flex items-center justify-center">
+               <div className="relative w-full md:w-[550px] md:h-[550px] h-[300px] rounded-xl bg-muted-foreground overflow-hidden">
+                  <Image
+                     src={HeroImage}
+                     alt="hero-image"
+                     className="object-cover absolute bottom-0 left-1/2 -translate-x-1/2 lg:size-full md:size-10/12 size-11/11"
+                     priority
+                  />
+               </div>
             </div>
          </div>
       </section>

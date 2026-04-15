@@ -83,12 +83,12 @@ const LoginForm = () => {
                )}
             >
                {/* decorative primary blob */}
-               <div className="absolute -top-16 -left-16 size-64 rounded-full bg-primary/20 blur-3xl pointer-events-none" />
-               <div className="absolute bottom-0 right-0 size-48 rounded-full bg-primary/10 blur-2xl pointer-events-none" />
+               <div className="absolute -top-16 -left-16 size-64 rounded-full bg-primary/50 blur-3xl pointer-events-none" />
+               <div className="absolute bottom-0 right-0 size-48 rounded-full bg-primary/50 blur-2xl pointer-events-none" />
 
                {/* logo / brand */}
                <div className="relative z-10">
-                  <span className="font-heading text-2xl tracking-wide text-primary">
+                  <span className="font-heading text-2xl tracking-wide dark:text-primary text-foreground">
                      Abid Khan
                   </span>
                </div>
@@ -104,19 +104,19 @@ const LoginForm = () => {
                               i % 3 === 0
                                  ? "bg-primary"
                                  : i % 2 === 0
-                                   ? "bg-primary/30"
-                                   : "bg-secondary-foreground/10",
+                                   ? "bg-primary/50"
+                                   : "bg-secondary-foreground/30",
                            )}
                         />
                      ))}
                   </div>
-                  <p className="text-muted-foreground text-sm mt-4 max-w-[220px] leading-relaxed">
+                  <p className="text-muted-foreground font-medium text-sm mt-4 max-w-[220px] leading-relaxed">
                      Admin access only. Sign in to manage your workspace.
                   </p>
                </div>
 
                {/* bottom quote */}
-               <p className="relative z-10 text-xs text-muted-foreground">
+               <p className="relative z-10 text-xs text-muted-foreground font-medium">
                   © {new Date().getFullYear()} Abid Khan. All rights reserved.
                </p>
             </div>

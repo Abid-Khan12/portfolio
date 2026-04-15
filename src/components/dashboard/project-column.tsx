@@ -67,7 +67,7 @@ const TechStackPopover = ({ techs }: { techs: string[] }) => {
                   {techs.map((tech) => (
                      <Badge
                         key={tech}
-                        className="justify-center truncate"
+                        className="justify-center truncate w-full"
                      >
                         {tech}
                      </Badge>
@@ -174,14 +174,7 @@ const projectColumns: ColumnDef<ColumnType>[] = [
       header: "Role",
       cell: ({ getValue }) => {
          const role = getValue<string>();
-         return (
-            <Badge
-               variant={role === "Frontend" ? "default" : "secondary"}
-               className="px-3"
-            >
-               {role ?? "-"}
-            </Badge>
-         );
+         return <Badge className="px-3">{role ?? "-"}</Badge>;
       },
    },
    {
