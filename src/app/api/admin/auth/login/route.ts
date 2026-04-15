@@ -1,4 +1,4 @@
-import z, { json } from "zod";
+import z from "zod";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";

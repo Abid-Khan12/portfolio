@@ -10,6 +10,7 @@ import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { Separator } from "@/components/ui/separator";
+import { AspectRatio } from "../ui/aspect-ratio";
 
 type ProjectCardProps = Pick<
    IProject,
@@ -36,16 +37,18 @@ const ProjectCard = ({
    return (
       <div className="w-full grid md:grid-cols-2 gap-4">
          <div className="h-[400px] md:w-[calc(100%-2rem)] w-full bg-secondary rounded-xl flex items-center justify-center">
-            <div className="md:size-10/12 size-10/12 relative overflow-hidden rounded-xl">
+            <AspectRatio
+               ratio={16 / 9}
+               className="md:size-10/12 size-10/12 relative overflow-hidden rounded-xl"
+            >
                <Image
                   src={projectImage.url}
-                  alt={title}
-                  className="object-cover"
-                  sizes="100%"
-                  fill
-                  priority
+                  alt={`project image: ${title}`}
+                  className="size-full object-cover"
+                  width={projectImage.width}
+                  height={projectImage.height}
                />
-            </div>
+            </AspectRatio>
          </div>
          <div className="flex flex-col gap-3">
             <h4 className="text-4xl font-bold">{title}</h4>

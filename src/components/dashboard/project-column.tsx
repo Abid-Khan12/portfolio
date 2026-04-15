@@ -79,6 +79,51 @@ const TechStackPopover = ({ techs }: { techs: string[] }) => {
    );
 };
 
+// Table Actions
+const TableAction = ({ slug }: { slug: string }) => {
+   const [open, setOpen] = useState(false);
+   return (
+      <>
+         <DropdownMenu>
+            <DropdownMenuTrigger
+               render={
+                  <Button
+                     variant="outline"
+                     size="icon"
+                  />
+               }
+            >
+               <MoreHorizontalIcon />
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent
+               align="end"
+               className={"space-y-2"}
+            >
+               <DropdownMenuItem render={<Link href={`/admin/projects/update/${slug}`} />}>
+                  <PencilIcon className="size-3.5" />
+                  Edit
+               </DropdownMenuItem>
+
+               <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => setOpen(true)}
+               >
+                  <Trash2Icon className="size-3.5" />
+                  Delete
+               </DropdownMenuItem>
+            </DropdownMenuContent>
+         </DropdownMenu>
+
+         <ProjectDeleteConfirmationDialog
+            open={open}
+            setOpen={setOpen}
+            slug={slug}
+         />
+      </>
+   );
+};
+
 const projectColumns: ColumnDef<ColumnType>[] = [
    {
       accessorKey: "title",
@@ -190,50 +235,9 @@ const projectColumns: ColumnDef<ColumnType>[] = [
       id: "actions",
       header: "Actions",
       cell: ({ row }) => {
-         const [open, setOpen] = useState(false);
-
          const { slug } = row.original;
 
-         return (
-            <>
-               <DropdownMenu>
-                  <DropdownMenuTrigger
-                     render={
-                        <Button
-                           variant="outline"
-                           size="icon"
-                        />
-                     }
-                  >
-                     <MoreHorizontalIcon />
-                  </DropdownMenuTrigger>
-
-                  <DropdownMenuContent
-                     align="end"
-                     className={"space-y-2"}
-                  >
-                     <DropdownMenuItem render={<Link href={`/admin/projects/update/${slug}`} />}>
-                        <PencilIcon className="size-3.5" />
-                        Edit
-                     </DropdownMenuItem>
-
-                     <DropdownMenuItem
-                        variant="destructive"
-                        onClick={() => setOpen(true)}
-                     >
-                        <Trash2Icon className="size-3.5" />
-                        Delete
-                     </DropdownMenuItem>
-                  </DropdownMenuContent>
-               </DropdownMenu>
-
-               <ProjectDeleteConfirmationDialog
-                  open={open}
-                  setOpen={setOpen}
-                  slug={slug}
-               />
-            </>
-         );
+         return <TableAction slug={slug} />;
       },
    },
 ];

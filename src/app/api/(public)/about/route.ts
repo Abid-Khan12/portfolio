@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 import logger from "@/lib/winston";
 import connectDB from "@/lib/mongoose";
@@ -7,7 +7,7 @@ import env from "@/schemas/env-schema";
 
 import UserModel, { IUser } from "@/models/user-model";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
    try {
       await connectDB();
 

@@ -79,7 +79,7 @@ export async function PATCH(request: NextRequest) {
          );
       }
 
-      let updatedUserData: UpdateData = { ...parsedBody };
+      const updatedUserData: UpdateData = { ...parsedBody };
 
       if (parsedBody.avatar) {
          const arrayBuffer = await parsedBody.avatar.arrayBuffer();

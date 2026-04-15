@@ -12,7 +12,9 @@ const ThemeToggler = () => {
    const [mounted, setMounted] = useState(false);
 
    // Prevent hydration mismatch
-   useEffect(() => setMounted(true), []);
+   useEffect(() => {
+      setMounted(true);
+   }, []);
 
    const isDark = mounted ? theme === "dark" : false;
 

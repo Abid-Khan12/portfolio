@@ -132,15 +132,14 @@ export async function PATCH(
       }
 
       if (parsedBody.description) {
+         parsedBody.description = purify.sanitize(parsedBody.description);
       }
-
-      parsedBody.description = purify.sanitize(parsedBody.description);
 
       await connectDB();
 
       const project = await ProjectModel.findOne({ slug }).lean().exec();
 
-      let newData: UpdateData = { ...parsedBody };
+      const newData: UpdateData = { ...parsedBody };
 
       if (parsedBody.projectImage) {
          const arrayBuffer = await parsedBody.projectImage.arrayBuffer();

@@ -1,17 +1,20 @@
-import { useEffect, useRef, useState } from "react";
-import type { PrimaryInputProps } from "@/types/type";
+import Image from "next/image";
+import { useRef, useState } from "react";
 import { Controller, type FieldValues } from "react-hook-form";
 
-import { Input } from "@/components/ui/input";
+import type { PrimaryInputProps } from "@/types/type";
+
+import { UploadIcon, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { UploadIcon, X } from "lucide-react";
+
+import { Input } from "@/components/ui/input";
 
 type FileFieldProps<T extends FieldValues> = { existingUrl?: string } & PrimaryInputProps<T>;
 
 const FileField = <T extends FieldValues>({ control, name, existingUrl }: FileFieldProps<T>) => {
    const inputRef = useRef<HTMLInputElement>(null);
-   const [preview, setPreview] = useState<string | null>(null);
+   const [preview, setPreview] = useState<string | null>(existingUrl ?? "");
 
    return (
       <Controller
@@ -28,20 +31,15 @@ const FileField = <T extends FieldValues>({ control, name, existingUrl }: FileFi
                setPreview(objectUrl);
             };
 
-            useEffect(() => {
-               if (existingUrl) {
-                  setPreview(existingUrl);
-               }
-            }, [existingUrl]);
-
             return (
                <div className="">
                   {preview ? (
                      <div className="relative size-16 group overflow-hidden rounded-full">
-                        <img
-                           className="size-full absolute object-cover"
+                        <Image
                            src={preview}
                            alt="image-preview"
+                           sizes="100%"
+                           fill
                         />
                         <div
                            className="absolute group-hover:opacity-100 opacity-0 transition-opacity duration-200 flex items-center justify-center size-full bg-destructive/40 z-20 cursor-pointer"

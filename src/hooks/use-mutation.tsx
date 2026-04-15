@@ -9,10 +9,11 @@ import useAdminContext from "@/context/admin-context";
 
 import { handleDelete, handlePost, handleUpdate } from "@/apis/api";
 
-const useCustomMutation = <TPayload = any, TResponse = {}>({ api_key, api_url }: HookProps) => {
+const useCustomMutation = <TPayload = unknown, TResponse = unknown>({
+   api_key,
+   api_url,
+}: HookProps) => {
    const { setUser } = useAdminContext();
-
-   
 
    const mutation = useMutation<ApiResponse<TResponse>, ApiError, MutationVaraibles<TPayload>>({
       mutationKey: api_key,
@@ -45,7 +46,7 @@ const useCustomMutation = <TPayload = any, TResponse = {}>({ api_key, api_url }:
             return;
          }
       }
-   }, [mutation.isPending, mutation.isError, mutation.error?.message]);
+   }, [mutation.isPending, mutation.isError, mutation.error, setUser]);
 
    return mutation;
 };

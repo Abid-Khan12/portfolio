@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 import logger from "@/lib/winston";
 import { verifyAccessToken } from "@/utils/generate-token";
 
-export async function POST(request: NextRequest) {
+export async function POST() {
    try {
       const cookieStore = await cookies();
       const accessToken = cookieStore.get("accessToken")?.value;

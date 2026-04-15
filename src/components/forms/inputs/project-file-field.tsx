@@ -10,7 +10,9 @@ import { PrimaryInputProps } from "@/types/type";
 import { Button } from "@/components/ui/button";
 import { Field, FieldContent, FieldError } from "@/components/ui/field";
 
-type ProjectFieldProps<T extends FieldValues> = { existingUrl?: string | null } & PrimaryInputProps<T>;
+type ProjectFieldProps<T extends FieldValues> = {
+   existingUrl?: string | null;
+} & PrimaryInputProps<T>;
 
 const ProjectFileField = <T extends FieldValues>({
    control,
@@ -100,7 +102,6 @@ const ProjectFileField = <T extends FieldValues>({
                      className="sr-only"
                      ref={(el) => {
                         ref(el);
-                        // @ts-ignore
                         inputRef.current = el;
                      }}
                      onChange={(e) => {

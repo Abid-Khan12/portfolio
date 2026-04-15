@@ -68,7 +68,7 @@ const AboutMeForm = () => {
       if (!isLoading && data?.data) {
          reset({ about: data.data.about });
       }
-   }, [data, isLoading]);
+   }, [data, isLoading, reset]);
 
    if (isLoading) {
       return (
@@ -77,7 +77,7 @@ const AboutMeForm = () => {
                <CardTitle className="text-2xl">About Me</CardTitle>
                <CardDescription>
                   Write a brief introduction about yourself — your background, skills, and what
-                  you're passionate about. This will be displayed on your public portfolio.
+                  you&apos;re passionate about. This will be displayed on your public portfolio.
                </CardDescription>
             </CardHeader>
             <CardContent>
@@ -94,8 +94,8 @@ const AboutMeForm = () => {
          <CardHeader>
             <CardTitle className="text-2xl">About Me</CardTitle>
             <CardDescription>
-               Write a brief introduction about yourself — your background, skills, and what you're
-               passionate about. This will be displayed on your public portfolio.
+               Write a brief introduction about yourself — your background, skills, and what
+               you&apos;re passionate about. This will be displayed on your public portfolio.
             </CardDescription>
          </CardHeader>
          <CardContent>

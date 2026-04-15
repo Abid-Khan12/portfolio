@@ -3,7 +3,7 @@
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -53,7 +53,6 @@ export default function ProjectUpdateForm({ slug }: UpdteDialogProps) {
       reset,
       control,
       register,
-      watch,
       formState: { errors },
    } = useForm<UpdateProjectFormData>({
       resolver: zodResolver(updateProjectSchema),
@@ -68,8 +67,12 @@ export default function ProjectUpdateForm({ slug }: UpdteDialogProps) {
       },
       mode: "all",
    });
+   const watchedValues = useWatch({
+      control,
+      name: ["title", "githubLink", "liveLink"],
+   });
 
-   const { title, githubLink, liveLink } = watch();
+   const [title, githubLink, liveLink] = watchedValues;
 
    const { mutate, isPending } = useCustomMutation({
       api_key: ["project_update_mutation", slug],
@@ -118,10 +121,10 @@ export default function ProjectUpdateForm({ slug }: UpdteDialogProps) {
    React.useEffect(() => {
       if (!isLoading && data?.data) {
          const projectDetails = data.data.project;
-         const { projectImage, ...projectData } = projectDetails;
+         const { projectImage: _projectImage, ...projectData } = projectDetails;
          reset(projectData);
       }
-   }, [data, isLoading]);
+   }, [data, isLoading, reset]);
 
    if (isLoading) {
       return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 
 import { UserResponse } from "@/types/type";
 
@@ -12,13 +12,12 @@ interface AppContext {
 const AppContext = createContext<AppContext | null>(null);
 
 export const AdminContextProvider = ({ children }: { children: ReactNode }) => {
-   const [user, setUser] = useState<UserResponse>(null);
+   const [user, setUser] = useState<UserResponse>(() => {
+      if (typeof window === "undefined") return null;
 
-   useEffect(() => {
       const userJson = localStorage.getItem("userData");
-      if (!userJson) return;
-      setUser(JSON.parse(userJson) as UserResponse);
-   }, []);
+      return userJson ? JSON.parse(userJson) : null;
+   });
 
    return <AppContext.Provider value={{ user, setUser }}>{children}</AppContext.Provider>;
 };

@@ -5,7 +5,7 @@ import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-tabl
 
 import { IProject } from "@/models/project-model";
 
-import { FolderKanbanIcon, SearchIcon } from "lucide-react";
+import { FolderKanbanIcon } from "lucide-react";
 
 import useFetch from "@/hooks/use-fetch";
 
@@ -79,7 +79,7 @@ const ProjectsTable = ({
 }: {
    limit?: number;
    skeletonLimit?: number;
-   api_key: string;
+   api_key?: string;
 }) => {
    const [offset, setOffset] = React.useState(0);
    const { data, isLoading } = useFetch<ProjectTableFetch>({
@@ -94,6 +94,7 @@ const ProjectsTable = ({
    const projects = data?.data.projects ?? [];
    const totalProjects = data?.data.total ?? 0;
 
+   // eslint-disable-next-line react-hooks/incompatible-library
    const table = useReactTable({
       data: projects,
       columns: projectColumns,

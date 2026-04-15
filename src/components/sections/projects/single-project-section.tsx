@@ -89,7 +89,7 @@ const SingleProjectSection = ({ slug }: { slug: string }) => {
             <div className="flex items-center gap-3 w-full flex-wrap font-medium">
                <span className="font-bold">Tech Stack : </span>
                {project.techStack.map((item) => (
-                  <Badge>{item}</Badge>
+                  <Badge key={item}>{item}</Badge>
                ))}
             </div>
 

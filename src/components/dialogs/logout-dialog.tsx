@@ -29,7 +29,7 @@ const LogoutDialog = ({ open, setOpen }: LogoutDialogProps) => {
       if (!isPending && (isSuccess || isError)) {
          setOpen(false);
       }
-   }, [isSuccess, isError, isPending]);
+   }, [isSuccess, isError, isPending, setOpen]);
 
    return (
       <Dialog
@@ -45,7 +45,7 @@ const LogoutDialog = ({ open, setOpen }: LogoutDialogProps) => {
                   <DialogTitle className={"text-3xl"}>Sign out?</DialogTitle>
                </div>
                <DialogDescription className={"text-center w-full"}>
-                  You'll be returned to the login screen. Any unsaved changes will be lost.
+                  You&apos;ll be returned to the login screen. Any unsaved changes will be lost.
                </DialogDescription>
             </DialogHeader>
             <DialogFooter className="justify-between!">

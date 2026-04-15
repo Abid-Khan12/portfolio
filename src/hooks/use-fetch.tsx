@@ -15,7 +15,7 @@ type FetchHookProps = {
    params?: Record<string, string | number>;
 } & HookProps;
 
-const useFetch = <TResponse = any,>({ api_key, api_url, slug, params }: FetchHookProps) => {
+const useFetch = <TResponse = unknown,>({ api_key, api_url, slug, params }: FetchHookProps) => {
    const queryClient = useQueryClient();
    const { setUser } = useAdminContext();
 
@@ -47,7 +47,7 @@ const useFetch = <TResponse = any,>({ api_key, api_url, slug, params }: FetchHoo
             window.location.href = "/admin/login";
          }
       }
-   }, [query.isLoading, query.isError, query.error]);
+   }, [query.isLoading, query.isError, query.error, setUser, queryClient]);
 
    return query;
 };
