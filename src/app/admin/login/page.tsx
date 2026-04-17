@@ -1,4 +1,11 @@
+import { Metadata } from "next";
+
 import LoginForm from "@/components/forms/login-form";
+
+export const metadata: Metadata = {
+   title: "Admin Login",
+   robots: { index: false, follow: false },
+};
 
 const AdminLoginPage = () => {
    return (

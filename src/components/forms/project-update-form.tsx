@@ -100,7 +100,6 @@ export default function ProjectUpdateForm({ slug }: UpdteDialogProps) {
                toast.success(message);
                queryClient.refetchQueries({
                   queryKey: ["projects_table_fetch"],
-                  exact: true,
                });
                router.back();
             },

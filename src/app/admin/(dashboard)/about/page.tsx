@@ -1,4 +1,10 @@
 import AboutMeForm from "@/components/forms/about-form";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+   title: "Manage About",
+   robots: { index: false, follow: false },
+};
 
 const AboutPage = () => {
    return (

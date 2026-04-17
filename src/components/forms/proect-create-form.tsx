@@ -70,7 +70,6 @@ const CreateProjectForm = () => {
                toast.success(message);
                queryClient.refetchQueries({
                   queryKey: ["projects_table_fetch"],
-                  exact: true,
                });
                queryClient.refetchQueries({
                   queryKey: ["dashboard_state"],

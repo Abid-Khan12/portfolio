@@ -1,9 +1,16 @@
+import { Metadata } from "next";
+
 import Link from "next/link";
 
 import { PlusIcon } from "lucide-react";
 
 import ProjectsTable from "@/components/dashboard/dashboard-project-table";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+   title: "Manage Projects",
+   robots: { index: false, follow: false },
+};
 
 const ProjectPage = () => {
    return (
@@ -20,7 +27,7 @@ const ProjectPage = () => {
          <ProjectsTable
             limit={6}
             skeletonLimit={6}
-            api_key="projects_page_table_fetch"
+            api_key={"projects_page_table_fetch"}
          />
       </div>
    );

@@ -140,3 +140,15 @@ export const handleUpdate = async <TPayload, TResponse>({
       };
    }
 };
+
+export async function getProjectBySlug(slug: string) {
+   const res = await fetch(
+      `https://abid-khan-portfolio-ebon.vercel.app/api/projects/${slug}`,
+      { next: { revalidate: 3600 } }, // cache for 1 hour
+   );
+
+   if (!res.ok) return null;
+
+   const data = await res.json();
+   return data.project ?? null; // adjust based on your API response shape
+}

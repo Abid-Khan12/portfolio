@@ -75,7 +75,7 @@ const TableSkeleton = ({ cols, rows = 5 }: { cols: number; rows?: number }) => (
 const ProjectsTable = ({
    limit = 5,
    skeletonLimit = 4,
-   api_key = "projects_table_fetch",
+   api_key = "",
 }: {
    limit?: number;
    skeletonLimit?: number;
@@ -83,7 +83,7 @@ const ProjectsTable = ({
 }) => {
    const [offset, setOffset] = React.useState(0);
    const { data, isLoading } = useFetch<ProjectTableFetch>({
-      api_key: [api_key, offset],
+      api_key: ["projects_table_fetch", offset, api_key],
       api_url: "/admin/projects",
       params: {
          limit: limit,
