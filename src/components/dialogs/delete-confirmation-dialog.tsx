@@ -30,6 +30,17 @@ const ProjectDeleteConfirmationDialog = ({ open, setOpen, slug }: ConfirmationDi
       mutate(
          { payload: {}, slug, method: "delete" },
          {
+            onSuccess({ message }) {
+               toast.success(message);
+               setOpen(false);
+               queryClient.refetchQueries({
+                  queryKey: ["projects_table_fetch"],
+               });
+               queryClient.refetchQueries({
+                  queryKey: ["dashboard_state"],
+                  exact: true,
+               });
+            },
             onError({ message }) {
                toast.error(message);
                queryClient.refetchQueries({
@@ -39,10 +50,6 @@ const ProjectDeleteConfirmationDialog = ({ open, setOpen, slug }: ConfirmationDi
                   queryKey: ["dashboard_state"],
                   exact: true,
                });
-            },
-            onSuccess({ message }) {
-               toast.success(message);
-               setOpen(false);
             },
          },
       );

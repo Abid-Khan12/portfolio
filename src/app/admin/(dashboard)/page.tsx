@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 const DashboardPage = () => {
    return (
-      <div className="flex flex-col gap-8 overflow-hidden w-full h-full pb-5">
+      <div className="flex flex-col gap-8 overflow-hidden w-full h-full">
          <DashboardStats />
          <ProjectsTable
             limit={4}
