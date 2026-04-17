@@ -38,7 +38,7 @@ export async function GET() {
       );
    } catch (error) {
       const err = error as Error;
-      logger.error("Profile Api error : ", { ...err });
+      logger.error("Profile Api error : ", { message: err.message });
       return NextResponse.json(
          { success: false, status: 500, message: "Internal server error", error: err.message },
          { status: 500 },
