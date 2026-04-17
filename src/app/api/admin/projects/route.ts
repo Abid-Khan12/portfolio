@@ -191,7 +191,7 @@ export async function GET(request: NextRequest) {
       );
    } catch (error) {
       const err = error as Error;
-      logger.error("Projects GET Api Error : ", { ...err });
+      logger.error("Projects GET Api Error : ", { message: err.message });
 
       return NextResponse.json(
          { success: false, status: 500, message: "Internal server error", error: err.message },

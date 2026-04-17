@@ -1,7 +1,3 @@
-import DOMPurify from "dompurify";
-import { JSDOM } from "jsdom";
+import DOMPurify from "isomorphic-dompurify";
 
-const window = new JSDOM("").window;
-const purify = DOMPurify(window);
-
-export default purify;
+export default DOMPurify;
