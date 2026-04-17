@@ -63,6 +63,7 @@ const AppSidebarHeader = () => {
 
 // ── Nav links ────────────────────────────────────────────────────────────────
 const AppSidebarNav = () => {
+   const { toggleSidebar, isMobile } = useSidebar();
    const pathname = usePathname();
 
    return (
@@ -82,6 +83,7 @@ const AppSidebarNav = () => {
                               "transition-colors duration-200",
                               isActive && "text-primary font-medium",
                            )}
+                           onClick={() => (isMobile ? toggleSidebar() : undefined)}
                         >
                            <Icon />
                            <span>{label}</span>

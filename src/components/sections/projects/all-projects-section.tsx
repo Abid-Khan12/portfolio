@@ -78,9 +78,9 @@ const AllProjectsSections = () => {
                {Array.from({ length: 3 }).map((_, i) => (
                   <div
                      key={`item-${i}`}
-                     className="w-full grid md:grid-cols-2"
+                     className="w-full grid md:grid-cols-2 gap-4"
                   >
-                     <Skeleton className="h-[400px] md:w-[calc(100%-2rem)] w-full rounded-xl" />
+                     <Skeleton className="h-[400px] w-full rounded-xl" />
 
                      <div className="flex flex-col gap-3">
                         <Skeleton className="h-10 w-full" />

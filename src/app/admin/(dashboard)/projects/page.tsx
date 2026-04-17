@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 const ProjectPage = () => {
    return (
-      <div className="flex flex-col gap-4 h-full">
+      <div className="flex flex-col gap-4 h-full pb-5">
          <div className="flex items-center justify-end">
             <Button
                nativeButton={false}

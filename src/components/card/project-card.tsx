@@ -36,23 +36,23 @@ const ProjectCard = ({
 }: ProjectCardProps) => {
    return (
       <div className="w-full grid md:grid-cols-2 gap-4">
-         <div className="h-[400px] md:w-[calc(100%-2rem)] w-full bg-secondary rounded-xl flex items-center justify-center">
-            <AspectRatio
-               ratio={16 / 9}
-               className="md:size-10/12 size-10/12 relative overflow-hidden rounded-xl"
-            >
-               <Image
-                  src={projectImage.url}
-                  alt={`project image: ${title}`}
-                  className="size-full object-cover"
-                  width={projectImage.width}
-                  height={projectImage.height}
-               />
-            </AspectRatio>
-         </div>
+         <AspectRatio
+            ratio={1 / 4}
+            className="md:h-[400px] h-[300px] w-full relative overflow-hidden rounded-xl"
+         >
+            <Image
+               src={projectImage.url}
+               alt={`project image: ${title}`}
+               className="object-cover"
+               sizes="100%"
+               fill
+               priority
+            />
+         </AspectRatio>
+
          <div className="flex flex-col gap-3">
             <h4 className="text-4xl font-bold">{title}</h4>
-            <p className="font-medium text-sm line-clamp-4 flex-1">{description}</p>
+            <p className="font-medium text-sm line-clamp-4 flex-1 leading-6">{description}</p>
             <div className="flex flex-col gap-3">
                <h5 className="text-xl font-medium uppercase">Project Info</h5>
                <Separator />
