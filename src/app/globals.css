@@ -263,4 +263,54 @@
    [role="button"]:not(:disabled) {
       cursor: pointer;
    }
+
+   .tiptap {
+      @apply grow outline-none;
+
+      h1,
+      h2,
+      h3 {
+         @apply font-semibold tracking-tight not-first:mt-6;
+      }
+
+      h1 {
+         @apply pb-2 text-3xl first:mt-0;
+      }
+
+      h2 {
+         @apply text-2xl;
+      }
+
+      h3 {
+         @apply text-xl;
+      }
+
+      p {
+         @apply leading-7 not-first:mt-6;
+      }
+
+      blockquote {
+         @apply mt-6 border-l-2 pl-6;
+      }
+
+      hr {
+         @apply my-6;
+      }
+
+      ul {
+         @apply my-6 ml-6 list-disc [&>li]:mt-2;
+      }
+
+      ol {
+         @apply my-6 ml-6 list-decimal [&>li]:mt-2;
+      }
+
+      code {
+         @apply bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono;
+      }
+
+      .is-editor-empty:first-child {
+         @apply before:text-muted-foreground before:content-[attr(data-placeholder)] before:float-left before:h-0 before:pointer-events-none;
+      }
+   }
 }
