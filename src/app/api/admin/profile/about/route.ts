@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 
 import connectDB from "@/lib/mongoose";
 import logger from "@/lib/winston";
-import purify from "@/lib/purify";
 import { verifyAccessToken } from "@/utils/generate-token";
 
 import UserModel, { IUser } from "@/models/user-model";
@@ -51,8 +50,6 @@ export async function PATCH(request: NextRequest) {
             { status: 400 },
          );
       }
-
-      parsedBody.about = purify.sanitize(parsedBody.about);
 
       await connectDB();
 

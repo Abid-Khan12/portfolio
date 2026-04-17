@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 import connectDB from "@/lib/mongoose";
 import logger from "@/lib/winston";
-import purify from "@/lib/purify";
 import { removeFromCloudinary, uploadToCloudinary } from "@/lib/cloudinary";
 import { verifyAccessToken } from "@/utils/generate-token";
 
@@ -129,10 +128,6 @@ export async function PATCH(
             },
             { status: 400 },
          );
-      }
-
-      if (parsedBody.description) {
-         parsedBody.description = purify.sanitize(parsedBody.description);
       }
 
       await connectDB();
