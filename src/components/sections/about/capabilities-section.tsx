@@ -10,6 +10,7 @@ const SkillsArr = [
    "shadcn",
    "react-query",
    "rest-api",
+   "zustand",
 ] as const;
 
 const CapabilitiesSection = () => {
