@@ -3,7 +3,7 @@
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { useForm, useWatch } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -52,7 +52,6 @@ export default function ProjectUpdateForm({ slug }: UpdteDialogProps) {
       handleSubmit,
       reset,
       control,
-      register,
       formState: { errors },
    } = useForm<UpdateProjectFormData>({
       resolver: zodResolver(updateProjectSchema),
@@ -209,12 +208,17 @@ export default function ProjectUpdateForm({ slug }: UpdteDialogProps) {
                   <Field className="relative">
                      <FieldLabel htmlFor="title">Project title</FieldLabel>
                      <FieldContent>
-                        <Input
-                           id="title"
-                           placeholder="E-commerce etc."
-                           aria-invalid={!!errors.title}
-                           value={title}
-                           {...register("title")}
+                        <Controller
+                           control={control}
+                           name="title"
+                           render={({ field, fieldState }) => (
+                              <Input
+                                 id="title"
+                                 placeholder="E-commerce etc."
+                                 aria-invalid={!!fieldState.error}
+                                 {...field}
+                              />
+                           )}
                         />
                      </FieldContent>
                      {errors.title && (
@@ -245,12 +249,17 @@ export default function ProjectUpdateForm({ slug }: UpdteDialogProps) {
                      <Field className="relative">
                         <FieldLabel htmlFor="github">Project github link</FieldLabel>
                         <FieldContent>
-                           <Input
-                              id="github"
-                              placeholder="Repo Link"
-                              value={githubLink}
-                              aria-invalid={!!errors.githubLink}
-                              {...register("githubLink")}
+                           <Controller
+                              control={control}
+                              name="githubLink"
+                              render={({ field, fieldState }) => (
+                                 <Input
+                                    id="github"
+                                    placeholder="Repo Link"
+                                    aria-invalid={!!fieldState.error}
+                                    {...field}
+                                 />
+                              )}
                            />
                         </FieldContent>
                         {errors.githubLink && (
@@ -262,11 +271,16 @@ export default function ProjectUpdateForm({ slug }: UpdteDialogProps) {
                      <Field>
                         <FieldLabel htmlFor="livelink">Project live link</FieldLabel>
                         <FieldContent>
-                           <Input
-                              id="livelink"
-                              placeholder="Live link (optional)"
-                              value={liveLink}
-                              {...register("liveLink")}
+                           <Controller
+                              control={control}
+                              name="liveLink"
+                              render={({ field }) => (
+                                 <Input
+                                    id="livelink"
+                                    placeholder="Live link (optional)"
+                                    {...field}
+                                 />
+                              )}
                            />
                         </FieldContent>
                      </Field>
